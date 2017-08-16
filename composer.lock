@@ -344,22 +344,22 @@
         },
         {
             "name": "nette/database",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/database.git",
-                "reference": "f7c6533e8640aa77ef8fcf68744c3f758afa0568"
+                "reference": "9b16e3ea2d9c21579962a17d81e17e4f71f59d6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/database/zipball/f7c6533e8640aa77ef8fcf68744c3f758afa0568",
-                "reference": "f7c6533e8640aa77ef8fcf68744c3f758afa0568",
+                "url": "https://api.github.com/repos/nette/database/zipball/9b16e3ea2d9c21579962a17d81e17e4f71f59d6b",
+                "reference": "9b16e3ea2d9c21579962a17d81e17e4f71f59d6b",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
                 "nette/caching": "^2.2",
-                "nette/utils": "^2.4 || ~3.0.0",
+                "nette/utils": "^2.4",
                 "php": ">=5.6.0"
             },
             "conflict": {
@@ -398,9 +398,21 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "Nette Database Component",
+            "description": "💾 Nette Database: layer with a familiar PDO-like API but much more powerful. Building queries, advanced joins, drivers for MySQL, PostgreSQL, SQLite, MS SQL Server and Oracle.",
             "homepage": "https://nette.org",
-            "time": "2017-07-12T17:48:16+00:00"
+            "keywords": [
+                "database",
+                "mssql",
+                "mysql",
+                "nette",
+                "notorm",
+                "oracle",
+                "pdo",
+                "postgresql",
+                "queries",
+                "sqlite"
+            ],
+            "time": "2017-07-27T10:58:17+00:00"
         },
         {
             "name": "nette/di",
@@ -1188,5 +1200,8 @@
     "platform": {
         "php": ">= 5.6"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "5.6"
+    }
 }
