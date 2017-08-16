@@ -18,3 +18,4 @@ session:
 
 services:
 	router: App\RouterFactory::createRouter
+	ukazkovyModel: App\Models\ExampleModel

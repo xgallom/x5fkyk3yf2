@@ -38,8 +38,28 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
+        <h1>Carpool starter template</h1>
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        {control nazovMojejKomponenty}
+      </div>
+
+      <div class="starter-template">
+        <h1>Some random DB data</h1>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <td>Data</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr n:foreach="$dbData as $val">
+              <td>{$val->id}</td>
+              <td>{$val->data}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
     </div><!-- /.container -->
