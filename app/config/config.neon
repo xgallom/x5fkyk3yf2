@@ -8,8 +8,8 @@ application:
 
 database:
 	dsn: 'pgsql:host=127.0.0.1;dbname=o2-carpool-develop'
-	user: postgres
-	password: postgres
+	user: o2-carpool
+	password: password
 	autowired: true
 
 session:
