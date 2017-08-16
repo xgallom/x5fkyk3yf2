@@ -6,6 +6,11 @@ application:
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
+database:
+	dsn: 'pgsql:host=127.0.0.1;dbname=o2-carpool-develop'
+	user: postgres
+	password: postgres
+	autowired: true
 
 session:
 	expiration: 14 days
