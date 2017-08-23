@@ -10,7 +10,9 @@ database:
 	dsn: 'pgsql:host=127.0.0.1;dbname=o2-carpool-develop'
 	user: o2-carpool
 	password: password
-	autowired: true
+	debugger: true
+	options:
+	    lazy: yes
 
 session:
 	expiration: 14 days
@@ -18,4 +20,5 @@ session:
 
 services:
 	router: App\RouterFactory::createRouter
-	ukazkovyModel: App\Models\ExampleModel
+	customerModel: App\Models\CustomerModel
+	travelModel: App\Models\TravelModel

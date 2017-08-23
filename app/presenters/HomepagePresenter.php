@@ -15,13 +15,13 @@ class HomepagePresenter extends BasePresenter
      * Property MUSI byt public a accesibilna zvonku (kvoli DI sluzbe)
      *
      * @inject
-     * @var Models\ExampleModel
+     * @var Models\TravelModel
      */
     public $model;
 
 
     public function renderDefault() {
-        $values = $this->model->find();
+        $values = $this->model->getTravels();
 
         // priradim pole do sablony
         $this->template->dbData = $values;
@@ -34,7 +34,7 @@ class HomepagePresenter extends BasePresenter
      * @param $name string
      * @return \Components\UserForm
      */
-    public function createComponentNazovMojejKomponenty($name)
+    public function createComponentUserForm($name)
     {
         return new \Components\UserForm($this, $name);
     }

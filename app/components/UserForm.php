@@ -10,14 +10,21 @@ class UserForm extends Form
     {
         parent::__construct($parent, $name);
 
-        $this->addText('login', 'Login (email)')
+        $this->addEmail('email', 'Login (E-Mail)')
             ->setRequired("Login nesmie byť prázdny!");
 
-        $this->addText('password', 'Heslo')
-            ->setRequired("Heslo nesmie byt prazdne!");
+        $this->addText('city_from', 'Miesto odchodu:')
+            ->setRequired("Mesto nesmie byt prazdne!");
 
-        $this->addCheckbox('aktivny', 'Aktívny');
+        $this->addText('date_from', 'Datum odchodu:')
+            ->setRequired("Datum nesmie byt prazdny!");
 
-        $this->addSubmit('submit', 'Uložiť');
+        $this->addText('city_to', 'Cielove miesto:')
+            ->setRequired("Mesto nesmie byt prazdne!");
+
+        $this->addText('date_to', 'Datum navratu:')
+            ->setRequired("Datum nesmie byt prazdny!");
+
+        $this->addSubmit('submit', 'Podme planovat!');
     }
 }

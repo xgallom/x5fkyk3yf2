@@ -3,12 +3,12 @@ namespace App\Models;
 
 use Nette;
 
-class ExampleModel extends BaseModel
+class CustomerModel extends BaseModel
 {
     /**
      * @var string
      */
-    protected $_table = 'test';
+    protected $_table = 'customer';
 
 
     /**
