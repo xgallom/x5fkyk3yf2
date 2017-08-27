@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "902a634bfa61bc1bb6a00273bff38171",
+    "content-hash": "26f97fd234cf05e61ea6d2210e194d7f",
     "packages": [
         {
             "name": "latte/latte",
@@ -1065,6 +1065,59 @@
             "description": "Nette Utility Classes",
             "homepage": "https://nette.org",
             "time": "2017-07-11T19:25:29+00:00"
+        },
+        {
+            "name": "nextras/forms",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nextras/forms.git",
+                "reference": "e2de1c3a8573bb8ea2c6122bd19bebef7a6f01a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nextras/forms/zipball/e2de1c3a8573bb8ea2c6122bd19bebef7a6f01a0",
+                "reference": "e2de1c3a8573bb8ea2c6122bd19bebef7a6f01a0",
+                "shasum": ""
+            },
+            "require": {
+                "latte/latte": "~2.4",
+                "nette/application": "~2.4",
+                "nette/component-model": "~2.3",
+                "nette/forms": "~2.4",
+                "nette/utils": "~2.4",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "nette/tester": "~1.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nextras\\Forms\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nextras Community",
+                    "homepage": "https://github.com/nextras/forms/graphs/contributors"
+                }
+            ],
+            "description": "Form components for Nette Framework.",
+            "keywords": [
+                "form",
+                "nette"
+            ],
+            "time": "2016-10-05T23:03:39+00:00"
         },
         {
             "name": "tracy/tracy",

@@ -38,42 +38,9 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1>Carpool travel finder</h1>
-        <p class="lead">Use this document as a way to quickly find or create a trip.</p>
+        <h1>O2 Dobrá jazda</h1>
+        <p class="lead">Vyhľadávanie spojenia</p>
           {control travelFinder}
-      </div>
-
-      <div class="starter-template">
-        <h1>Carpool registered travels</h1>
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Departure</th>
-              <th>Travel type</th>
-              <th>Driver</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Free space</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr n:foreach="$dbData as $val">
-              <td>{$val->departure}</td>
-              <td>
-                {switch $val->travel_type_name}
-                  {case car_compan}Company car
-                  {case car_rental}Rental car
-                  {case car_person}Personal car
-                {/switch}
-              </td>
-              <td>{$val->customer_email}</td>
-              <td>{$val->city_from_name} {$val->address}</td>
-              <td>{$val->city_to_name}</td>
-              <td>{4 - $val->taken_spots} / 4</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
 
     </div><!-- /.container -->

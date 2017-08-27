@@ -17,7 +17,9 @@ class RouterFactory
 	public static function createRouter()
 	{
 		$router = new RouteList;
-		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+        $router[] = new Route('search/show ? city_from=<cityFrom> & city_to=<cityTo> & trip_type=<tripType>', 'Search:show');
+        $router[] = new Route('search/request ? city_from=<cityFrom> & city_to=<cityTo> & trip_type=<tripType>', 'Search:request');
+        $router[] = new Route('<presenter>/<action>', 'Search:request');
 		return $router;
 	}
 }

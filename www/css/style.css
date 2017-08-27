@@ -6,3 +6,111 @@ body {
   text-align: center;
 }
 
+.input-row {
+  padding-bottom: 1rem;
+}
+
+label {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.btn-not-outer, .btn-first, .btn-last {
+  border-radius: 0;
+}
+
+.btn-first {
+  border-top-left-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+}
+
+.btn-last {
+  border-top-right-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+}
+
+.a-like-label {
+}
+
+.show-header {
+  border-radius: .25rem;
+  background-color: #eee;
+  background-color: #343a40;
+  color: #fff;
+  padding: 1rem;
+  padding-top: .55rem;
+  padding-bottom: .55rem;
+
+  margin: 1rem;
+}
+
+.selector {
+  border-radius: .25rem;
+  background-color: #eee;
+  padding: 1rem;
+  padding-top: .25rem;
+  padding-bottom: 1rem;
+  margin: 1rem;
+}
+
+.selector-head {
+#  border-radius: .25rem;
+  margin-top: 1rem;
+  margin-bottom: 0rem;
+}
+
+.selector-head > * {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  background-color: #343a40;
+}
+
+.selector-date-select > * {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.selector-row {
+  border-radius: .25rem;
+  margin-top: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+.selector-accordion {
+  margin-top: 1rem;
+}
+
+.selector-card-header {
+  font-size: 1rem;
+}
+
+.row-spaced {
+  margin-bottom: 1rem;
+}
+
+.nohover:hover {
+  background-color: transparent;
+  background-image: none;
+  color: #343a40;;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.text-gray-white, .text-gray-white:hover {
+  color: #fff;
+  border-color: #fff;
+}
+.text-gray-dark, .text-gray-dark:hover {
+  color: #212529;
+  border-color: #212529;
+}
+

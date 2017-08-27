@@ -20,5 +20,11 @@ session:
 
 services:
 	router: App\RouterFactory::createRouter
+	cityModel: App\Models\CityModel
 	customerModel: App\Models\CustomerModel
 	travelModel: App\Models\TravelModel
+	travelTypeModel: App\Models\TravelTypeModel
+	tripModel: App\Models\TripModel
+
+extensions:
+    nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension

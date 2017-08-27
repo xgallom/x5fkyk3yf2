@@ -34,18 +34,20 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         // setup form rendering
         $renderer = $form->getRenderer();
-        $renderer->wrappers['controls']['container'] = NULL;
-        $renderer->wrappers['pair']['container'] = 'div class=form-group';
+        $renderer->wrappers['pair']['container'] = 'div class="row input-row"';
+//        $renderer->wrappers['pair']['container'] = 'div class=input-group';
         $renderer->wrappers['pair']['.error'] = 'has-error';
-        $renderer->wrappers['control']['container'] = 'div class=col-sm-9';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-3 control-label"';
+        $renderer->wrappers['control']['container'] = 'div class=col-sm-7';
+//        $renderer->wrappers['control']['container'] = NULL;
+        $renderer->wrappers['label']['container'] = 'div class="col-sm-5 control-label"';
+//        $renderer->wrappers['label']['container'] = 'span class=input-group-addon control-label"';
         $renderer->wrappers['control']['description'] = 'span class=help-block';
         $renderer->wrappers['control']['errorcontainer'] = 'span class=help-block';
         // make form and controls compatible with Twitter Bootstrap
         $form->getElementPrototype()->class('form-horizontal');
         foreach ($form->getControls() as $control) {
             if ($control instanceof Controls\Button) {
-                $control->getControlPrototype()->addClass('btn btn-default');
+                $control->getControlPrototype()->addClass('btn btn-primary');
                 $usedPrimary = TRUE;
             } elseif ($control instanceof Controls\TextBase || $control instanceof Controls\SelectBox || $control instanceof Controls\MultiSelectBox) {
                 $control->getControlPrototype()->addClass('form-control');
@@ -59,5 +61,4 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
         $form->setRenderer($renderer);
     }
-
 }

@@ -6,6 +6,12 @@ use Nette;
 class TravelModel extends BaseModel
 {
     /**
+     * @var string
+     */
+    protected $_table = 'travel';
+
+
+    /**
      * Constructor
      *
      * @param Nette\Database\Context    $db
@@ -17,7 +23,7 @@ class TravelModel extends BaseModel
 
     }
 
-    public function getTravels()
+    public function getTravels($cityFromId, $cityToId, $departure)
     {
         $result = parent::db()->query(
 '
@@ -49,12 +55,12 @@ RIGHT JOIN (
 					SELECT t.*, tr.customer_id, (CASE WHEN t.is_approved IS NULL THEN tr.is_approved ELSE t.is_approved END) AS f_is_approved
 					FROM trip as tr
 					RIGHT JOIN (
-						SELECT * FROM travel
+						SELECT * FROM travel WHERE departure = "' . $departure . '" AND city_from_id = ' . $cityFromId . ' AND city_to_id = ' . $cityToId . '
 					) AS t ON t.trip_id = tr.id
 				) AS t ON t.travel_type_id = tt.id WHERE tt.is_provider IS TRUE
 			) AS t ON t.customer_id = cs.id WHERE f_is_approved IS TRUE
-		) AS t ON t.city_from = c.id
-	) AS t ON t.city_to = c.id
+		) AS t ON t.city_from_id = c.id
+	) AS t ON t.city_to_id = c.id
 ) AS t ON tp.travel_provider_id = t.id
 GROUP BY t.id, t.departure, t.travel_type_name, t.customer_email, t.city_from_name, t.address, t.city_to_name
 ORDER BY t.departure ASC

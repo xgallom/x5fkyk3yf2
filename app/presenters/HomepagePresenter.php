@@ -3,7 +3,8 @@
 namespace App\Presenters;
 
 use Nette,
-    App\Models;
+    App\Models,
+    Nette\Application\UI;
 
 
 class HomepagePresenter extends BasePresenter
@@ -17,14 +18,19 @@ class HomepagePresenter extends BasePresenter
      * @inject
      * @var Models\TravelModel
      */
-    public $model;
+    public $travelModel;
 
+    /**
+     * @inject
+     * @var Models\CityModel
+     */
+    public $cityModel;
 
     public function renderDefault() {
-        $values = $this->model->getTravels();
+    }
 
-        // priradim pole do sablony
-        $this->template->dbData = $values;
+    public function renderShow() {
+
     }
 
     /**
@@ -32,10 +38,25 @@ class HomepagePresenter extends BasePresenter
      * nazov funkcie "createComponentXXX" kde XXX je nazov komponenty ktorym ju volame v sablonach presenteru
      *
      * @param $name string
-     * @return \Components\UserForm
+     * @return \Components\TravelFinder
      */
-    public function createComponentUserForm($name)
+    public function createComponentTravelFinder($name)
     {
-        return new \Components\UserForm($this, $name);
+        $cities = [];
+        foreach($this->cityModel->table() as $val)
+            array_push($cities, $val->name);
+
+        $form = new \Components\TravelFinder($this, $name, $cities);
+        $form->onSuccess[] = [$this, 'travelFinderSucceeded'];
+        return $form;
+    }
+
+    public function travelFinderSucceeded(UI\Form $form, $values)
+    {
+        $this->redirectUrl('search/show' .
+            '?city_from=' . $values['city_from'] .
+            '&city_to=' . $values['city_to'] .
+            '&trip_type=' . $values['trip_type']
+        );
     }
 }
