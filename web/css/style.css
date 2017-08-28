@@ -1,6 +1,39 @@
 body {
   padding-top: 5rem;
 }
+
+.form-container {
+  text-align: left;
+  padding: 3rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.btn-form {
+  margin-top: 3rem;
+}
+
+.btn-group label {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.alert-form {
+  margin: .55rem 5rem;
+}
+
+.breadcrumb-navbar {
+  margin: 0;
+}
+
+@media (min-width: 992px) {
+  .breadcrumb-navbar {
+    float: right;
+  }
+}
+
 .starter-template {
   padding: 1.5rem;
   text-align: center;
@@ -8,11 +41,6 @@ body {
 
 .input-row {
   padding-bottom: 1rem;
-}
-
-label {
-  margin-top: 8px;
-  margin-bottom: 0;
 }
 
 .btn-halfrow {

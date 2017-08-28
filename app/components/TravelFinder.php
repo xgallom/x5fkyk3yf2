@@ -18,8 +18,8 @@ class TravelFinder extends Form
                 'city_to' => 'Banská Bystrica'
             ];
 
-        $this->addRadioList('trip_type', 'Druh jazdy', ['false' => 'Jednosmerná', 'true' => 'Spiatočná'])
-            ->setDefaultValue($default_values['trip_type']);
+        $this['trip_type'] = new \Nette\Forms\Controls\ButtonSelect('Druh jazdy', ['false' => 'Jednosmerná', 'true' => 'Spiatočná']);
+        $this['trip_type']->setDefaultValue($default_values['trip_type']);
 
         $this->addText('city_from', 'Odkiaľ')
             ->setRequired("Mesto nesmie byt prazdne!")
