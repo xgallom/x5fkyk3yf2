@@ -67,7 +67,8 @@ class TravelSelector extends Control
         $this->template->cityFrom = $cityFrom;
         $this->template->cityTo = $cityTo;
         $this->template->tripStep = $tripStep;
-        $this->template->backDisabled = DateTime::from($this->firstDate) == $this->minimumDate;
+        $this->template->backDisabled = DateTime::from($this->firstDate) <= $this->minimumDate;
+        $this->template->minimumDate = $this->minimumDate;
         $this->template->currentDate = $this->currentDate;
         $this->template->currentTravelType = $this->currentTravelType;
         $this->template->currentTravelProvider = $this->currentTravelProvider;
@@ -159,8 +160,47 @@ class TravelSelector extends Control
         $this->template->dateList = [];
         $date = DateTime::from($this->firstDate);
         for($i = 0; $i < 7; $i++) {
-            array_push($this->template->dateList, ['val' => $date->format('Y-m-d'), 'str' => $date->format('d.m.')]);
+            array_push($this->template->dateList, ['val' => $date->format('Y-m-d'), 'date_val' => clone $date, 'day' => $this->dayToSlovak($date->format('D')), 'str' => $date->format('d.m.')]);
             $date->modify('+1 day');
+        }
+    }
+
+    private function dayToSlovak($date)
+    {
+        switch($date)
+        {
+            case 'Mon':
+                return 'Pon';
+                break;
+
+            case 'Mon':
+                return 'Pon';
+                break;
+
+            case 'Tue':
+                return 'Ut';
+                break;
+
+            case 'Wed':
+                return 'Str';
+                break;
+
+            case 'Thu':
+                return 'Štv';
+                break;
+
+            case 'Fri':
+                return 'Pi';
+                break;
+
+            case 'Sat':
+                return 'Sob';
+                break;
+
+            case 'Sun':
+                return 'Ned';
+                break;
+
         }
     }
 }
