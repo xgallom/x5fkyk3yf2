@@ -42,6 +42,12 @@ class SearchPresenter extends BasePresenter
     }
 
     public function renderRequest($cityFrom, $cityTo, $tripType) {
+        $cities = [];
+        foreach($this->cityModel->table() as $val)
+            array_push($cities, $val->name);
+
+        $this->template->cities = $cities;
+
         if($cityFrom !== null && $cityTo !== null && $tripType !== null) {
             $this->cityFrom = $this->template->cityFrom = $cityFrom;
             $this->cityTo = $this->template->cityTo = $cityTo;
@@ -76,6 +82,7 @@ class SearchPresenter extends BasePresenter
                 'trip_type' => $this->tripType
             ] : null
         );
+
         $form->onSuccess[] = [$this, 'travelFinderSucceeded'];
         return $form;
     }

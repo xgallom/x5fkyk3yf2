@@ -23,13 +23,13 @@ class TravelFinder extends Form
 
         $this->addText('city_from', 'Odkiaľ')
             ->setRequired("Mesto nesmie byt prazdne!")
-            ->setHtmlAttribute('city_autofill')
+            ->setHtmlAttribute('city_autofill', 'true')
             ->addRule(Form::EQUAL, 'Zadajte existujuce mesto', $cities)
             ->setDefaultValue($default_values['city_from']);
 
         $this->addText('city_to', 'Kam')
             ->setRequired("Mesto nesmie byt prazdne!")
-            ->setHtmlAttribute('city_autofill')
+            ->setHtmlAttribute('city_autofill', 'true')
             ->addRule(Form::EQUAL, 'Zadajte existujuce mesto', $cities)
             ->setDefaultValue($default_values['city_to']);
 
