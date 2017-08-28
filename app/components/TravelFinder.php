@@ -15,7 +15,7 @@ class TravelFinder extends Form
             $default_values = [
                 'trip_type' => 'true',
                 'city_from' => 'Bratislava',
-                'city_to' => 'Banska Bystrica'
+                'city_to' => 'Banská Bystrica'
             ];
 
         $this->addRadioList('trip_type', 'Druh jazdy', ['false' => 'Jednosmerná', 'true' => 'Spiatočná'])
@@ -24,13 +24,13 @@ class TravelFinder extends Form
         $this->addText('city_from', 'Odkiaľ')
             ->setRequired("Mesto nesmie byt prazdne!")
             ->setHtmlAttribute('city_autofill', 'true')
-            ->addRule(Form::EQUAL, 'Zadajte existujuce mesto', $cities)
+            ->addRule(Form::EQUAL, 'Zadajte existujúce mesto', $cities)
             ->setDefaultValue($default_values['city_from']);
 
         $this->addText('city_to', 'Kam')
             ->setRequired("Mesto nesmie byt prazdne!")
             ->setHtmlAttribute('city_autofill', 'true')
-            ->addRule(Form::EQUAL, 'Zadajte existujuce mesto', $cities)
+            ->addRule(Form::EQUAL, 'Zadajte existujúce mesto', $cities)
             ->setDefaultValue($default_values['city_to']);
 
         $this->addSubmit('submit', 'Vyhladať spojenie');
