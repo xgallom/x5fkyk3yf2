@@ -157,7 +157,7 @@ class SearchPresenter extends BasePresenter
         $cityFromId = $this->cityModel->table()->where('name', $cityFrom)->fetchField('id');
         $cityToId = $this->cityModel->table()->where('name', $cityTo)->fetchField('id');
 
-        $email = $email . '@o2.sk';
+        $email = $email . '@gmail.com';
 
         $customer = $this->customerModel->table()->where('email', $email)->fetch();
 
@@ -171,7 +171,7 @@ class SearchPresenter extends BasePresenter
             $mailConfirm->setFrom('gallo@xgallom.sk')
                 ->addTo($email)
                 ->setSubject('Potvrdenie účtu O2 Dobrá jazda')
-                ->setBody('<a href="o2-carpool.xgallom.sk/web/mail/confirm?customer=' . $customer->id . '"');
+                ->setBody('<a href="x5fkyk3yf2.xgallom.sk/web/mail/confirm?customer=' . $customer->id . '">Potvrdit ucet</a>');
 
             $this->sendmailMailer->send($mailConfirm);
 //            Debugger::dump($mailConfirm->generateMessage());
