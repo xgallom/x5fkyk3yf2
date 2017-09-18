@@ -2,6 +2,10 @@ body {
   padding-top: 5rem;
 }
 
+.navbar {
+  background-color: #2d2e35 !important;
+}
+
 .form-container {
   text-align: left;
   padding: 3rem;
@@ -34,8 +38,23 @@ body {
   }
 }
 
+body {
+  padding: 0;
+}
+
+.start-container {
+  margin-top: 5rem;
+  margin-bottom: 1rem;
+}
+
+.main-container {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
 .starter-template {
   padding: 1.5rem;
+  padding-bottom: 0;
   text-align: center;
 }
 
@@ -76,12 +95,22 @@ body {
   margin: 1rem;
 }
 
+.btn-big {
+  margin: 0 2rem;
+}
+
 .selector {
   border-radius: .25rem;
   background-color: #eee;
   padding: 1rem;
   padding-top: .25rem;
   margin: 1rem;
+}
+
+.selector-summary {
+  padding: 1rem;
+  background-color: #f8f8f8;
+  #color: #111;
 }
 
 .selector-head {
@@ -106,6 +135,7 @@ body {
 }
 
 .selector-row {
+  display: flex;
   border-radius: .25rem;
   margin-top: 1rem;
   margin-left: 0;
@@ -126,6 +156,15 @@ body {
   margin-bottom: 1rem;
 }
 
+.row-spaced-more {
+  margin-bottom: 1.5rem;
+}
+
+.row-padded {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .nohover:hover {
   background-color: transparent;
   background-image: none;
@@ -143,5 +182,13 @@ a:hover {
 .text-gray-dark, .text-gray-dark:hover {
   color: #212529;
   border-color: #212529;
+}
+
+.header-logo {
+  background: url('../img/logo_dobra_jazda.png') center no-repeat;
+  background-size: contain;
+  #width: 235px;
+  #height: 144px;
+  margin: auto;
 }
 

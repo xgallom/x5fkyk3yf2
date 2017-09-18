@@ -1,0 +1,103 @@
+{block content}
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" n:href="request, $cityFrom, $cityTo, $tripType"><img src="/o2-carpool/web/img/logo_dobra_jazda_sml.png" height="40px"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav breadcrumb breadcrumb-navbar bg-dark">
+            <li class="breadcrumb-item"><a class="text-white" n:href="request, $cityFrom, $cityTo, $tripType">Vyhľadávanie spojenia</a></li>
+            <li class="breadcrumb-item"><a class="text-white"
+                n:href="show, $cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1"
+            >Plánovanie cesty</a></li>
+            <li class="breadcrumb-item active">Zhrnutie</li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container main-container">
+
+    <div class="starter-template">
+        <div class="row show-header">
+            <div class="col col-lg-3 text-left">
+                <h5 class="text-middle">Vybrané spojenie</h5>
+            </div>
+            <div class="col col-lg-2 btn btn-sm text-left">
+                {switch $tripType}
+                    {case 'true'}Spiatočná cesta
+                    {case 'false'}Jednosmerná cesta
+                {/switch}
+            </div>
+            <div class="col col-lg-2 btn btn-sm"><b>{$cityFrom}</b></div>
+            <div class="col col-lg-1 btn btn-sm"><b>-></b></div>
+            <div class="col col-lg-2 btn btn-sm"><b>{$cityTo}</b></div>
+            <div class="col col-lg-2"><a class="btn btn-block btn-primary btn-sm"
+                n:href="show, $cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1"
+            >Zmeniť spojenie</a></div>
+        </div>
+
+        <form
+            action="{link Search:submit}"
+            method="get"
+        >
+            <input type="hidden" name="city_from" value="{$cityFrom}">
+            <input type="hidden" name="city_to"   value="{$cityTo}">
+            <input type="hidden" name="trip_type" value="{$tripType}">
+
+            <input type="hidden" name="departure_0"   value="{$departure0}">
+            <input type="hidden" name="travel_type_0" value="{$travelType0}">
+            <input type="hidden" name="travel_provider_0"   value="{$travelProvider0}">
+
+            <input type="hidden" name="departure_1"   value="{$departure1}">
+            <input type="hidden" name="travel_type_1" value="{$travelType1}">
+            <input type="hidden" name="travel_provider_1"   value="{$travelProvider1}">
+
+            {control travelInfo0 $cityFrom, $cityTo, 'false', $departure0, $travelType0, $travelProvider0}
+
+            {if $tripType == 'true'}
+                {control travelInfo1 $cityTo, $cityFrom, 'true', $departure1, $travelType1, $travelProvider1}
+            {/if}
+
+            <div class="selector selector-summary">
+                <div class="row row-padded row-spaced">
+                    <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-12"><h5 class="text-dark">Kontaktné Údaje</h5></div>
+                </div>
+
+                <div class="row row-padded">
+                    <div class="input-group" style="margin-left: 4.5rem; width: 18rem">
+                        <span class="input-group-addon">E-Mail</span>
+                        <input class="form-control" name="email" type="text" value="">
+                        <span class="input-group-addon">@o2.sk</span>
+                    </div>
+                    <div class="col col-xl-3"></div>
+                    <div class="input-group" style="margin-left: 4.5rem; width: 18rem">
+                        <span class="input-group-addon">Mobil</span>
+                        <input class="form-control" name="phone" type="tel" value="09">
+                    </div>
+                </div>
+            </div>
+
+            {if $travelType0 == 'car_rental'}
+                <div class="selector selector-summary">
+                    <div class="row row-padded row-spaced">
+                        <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-12"><h5 class="text-dark">Kontakt na nadriadeného</h5></div>
+                    </div>
+
+                    <div class="row row-padded">
+                        <div class="input-group" style="margin: auto; width: 18rem">
+                            <span class="input-group-addon">E-Mail</span>
+                            <input class="form-control" name="supervisor" type="text" value="">
+                            <span class="input-group-addon">@o2.sk</span>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
+            <div style="margin: 1rem;">
+                <input type="submit" class="btn btn-block btn-primary" value="Potvrdiť cestu">
+            </div>
+        </form>
+    </div>
+</div>

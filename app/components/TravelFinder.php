@@ -18,7 +18,7 @@ class TravelFinder extends Form
                 'city_to' => 'Banská Bystrica'
             ];
 
-        $this['trip_type'] = new \Nette\Forms\Controls\ButtonSelect('Druh jazdy', ['false' => 'Jednosmerná', 'true' => 'Spiatočná']);
+        $this['trip_type'] = new \Nette\Forms\Controls\ButtonSelect('Druh jazdy', ['true' => 'Spiatočná', 'false' => 'Jednosmerná']);
         $this['trip_type']->setDefaultValue($default_values['trip_type']);
 
         $this->addText('city_from', 'Odkiaľ')

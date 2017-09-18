@@ -2,29 +2,30 @@
       <div class="row">
             <div class="btn-group col-lg-12 selector-head">
                   <div class="col text-white col-xs-12 col-sm-4 col-lg-3 col-xl-2 btn-first">{$cityFrom}</div>
-                  <div class="col text-white col-sm-1 col-lg-1 col-xl-1">-></div>
-                  <div class="col text-white col-sm-4 col-lg-3 col-xl-2">{$cityTo}</div>
-                  <div class="col text-white          col-lg-3 col-xl-5 hidden-sm visible-md"></div>
-                  <div class="col text-white col-sm-3 col-lg-2 col-xl-2 btn-last">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
+                  <div class="col text-white           col-sm-1 col-lg-1 col-xl-1"><b>-></b></div>
+                  <div class="col text-white           col-sm-4 col-lg-3 col-xl-2"><b>{$cityTo}</b></div>
+                  <div class="col text-white                    col-lg-3 col-xl-5 hidden-sm visible-md"></div>
+                  <div class="col text-white           col-sm-3 col-lg-2 col-xl-2 btn-last">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
             </div>
       </div>
       <div class="row">
             <div class="btn-group col-sm-12 selector-date-select">
                   <a class="btn btn-dark col-lg-date btn-halfrow {if $backDisabled} disabled{/if}" n:href="dateRowChange '-7 days'"><-</a>
                   {foreach $dateList as $date}
-                        <a class="btn col-lg-2 {if $date['val'] == $currentDate} btn-primary{elseif $date['date_val'] < $minimumDate} btn-dark disabled{else} btn-dark{/if}" n:href="dateChange $date['val']">{$date['day']}<br>{$date['str']}</a>
+                        <a class="btn col-lg-2 {if $date['val'] == $currentDate} btn-primary{elseif $date['date_val'] < $minimumDate} btn-dark disabled{else} btn-dark{/if}"
+                          n:href="dateChange $date['val']">{$date['day']}<br>{$date['str']}</a>
                   {/foreach}
                   <a class="btn btn-dark col-lg-2 btn-halfrow" n:href="dateRowChange '+7 days'">-></a>
             </div>
       </div>
 
       {foreach $dbData as $val}
-            <a class="row selector-row {if $currentTravelType == 'passenger' && $currentTravelProvider == $val['row']->id}bg-primary text-white{else}bg-light text-gray-dark{/if}" style="cursor: pointer;"
+            <a class="row selector-row btn btn-block {if $onlyPoolCar == 2 || $val['spots'] == 0}disabled btn-light{elseif $currentTravelType == 'passenger' && $currentTravelProvider == $val['row']->id}btn-primary{else}btn-light{/if}" style="cursor: pointer;"
                   n:href="changeTravelType 'passenger', $val['row']->id">
-                  <div class="col col-lg-3 btn">{$val['row']->departure->format('d.m. H:i')}</div>
-                  <div class="col col-lg-4 btn">{$val['row']->trip->customer->email}</div>
-                  <div class="col col-lg-2 btn">Voľných miest: {$val['spots']}</div>
-                  <div class="col col-lg-3 btn">Pridať sa k posádke</div>
+                  <div class="col col-lg-3">{$val['row']->departure->format('d.m. H:i')}</div>
+                  <div class="col col-lg-4">{$val['row']->trip->customer->email}</div>
+                  <div class="col col-lg-2">Voľných miest: {$val['spots']}</div>
+                  <div class="col col-lg-3">Pridať sa k posádke</div>
             </a>
       {/foreach}
 
@@ -34,32 +35,30 @@
                         Zobraziť ďaľšie možnosti
                   </a>
 
-                  <div id="collapse_{$name}" class="collapse{if in_array($currentTravelType, $collapseShownList)} show{/if}" role="tabpanel" aria-labelledby="heading_{$name}" data-parent="#accordion_{$name}">
+                  <div id="collapse_{$name}" class="collapse{if !count($dbData) || in_array($currentTravelType, $collapseShownList)} show{/if}" role="tabpanel" aria-labelledby="heading_{$name}" data-parent="#accordion_{$name}">
                         <div class="card-body">
                               <div class="container">
                                     <div class="row row-spaced">
-                                          <div class="col col-lg-1"></div>
-                                          <div class="col col-lg-5">
-                                                <a class="btn btn-block {if $currentTravelType == 'car_company'}btn-primary{else}btn-light{/if}"
+                                          <div class="col hidden-sm visible-md col-md-1"></div>
+                                          <div class="col row-md-spaced col-md-12 col-lg-5">
+                                                <a class="btn btn-block {if $onlyPoolCar == 2}disabled btn-light{elseif $currentTravelType == 'car_company'}btn-primary{else}btn-light{/if}"
                                                         n:href="changeTravelType 'car_company', null">Pôjdem svojím služobným vozidlom</a>
                                           </div>
-                                          <div class="col col-lg-5">
-                                                <a class="btn btn-block {if $currentTravelType == 'car_personal'}btn-primary{else}btn-light{/if}"
+                                          <div class="col col-md-12 col-lg-5">
+                                                <a class="btn btn-block {if $onlyPoolCar == 2}disabled btn-light{elseif $currentTravelType == 'car_personal'}btn-primary{else}btn-light{/if}"
                                                         n:href="changeTravelType 'car_personal', null">Použijem súkromné vozidlo</a>
                                           </div>
-                                          <div class="col col-lg-1"></div>
                                     </div>
-                                    <div class="row row-spaced">
-                                          <div class="col col-lg-1"></div>
-                                          <div class="col col-lg-5">
-                                                <a class="btn btn-block {if $currentTravelType == 'car_rental'}btn-primary{else}btn-light{/if}"
+                                    <div class="row">
+                                          <div class="col hidden-sm visible-md col-md-1"></div>
+                                          <div class="col row-md-spaced col-md-12 col-lg-5">
+                                                <a class="btn btn-block {if $onlyPoolCar == 1}disabled btn-light{elseif $currentTravelType == 'car_rental'}btn-primary{else}btn-light{/if}"
                                                         n:href="changeTravelType 'car_rental', null">Chcem si zapožičať služobné vozidlo</a>
                                           </div>
-                                          <div class="col col-lg-5">
-                                                <a class="btn btn-block {if $currentTravelType == 'other'}btn-primary{else}btn-light{/if}"
+                                          <div class="col col-md-12 col-lg-5">
+                                                <a class="btn btn-block {if $onlyPoolCar == 2}disabled btn-light{elseif $currentTravelType == 'other'}btn-primary{else}btn-light{/if}"
                                                         n:href="changeTravelType 'other', null">Využijem iný typ dopravy</a>
                                           </div>
-                                          <div class="col col-lg-1"></div>
                                     </div>
                               </div>
                         </div>

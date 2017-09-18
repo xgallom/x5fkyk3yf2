@@ -1,11 +1,18 @@
-@media (min-width: 768px) {
-    .hidden-sm {
-        display: none;
-    }
+.row-md-spaced {
+    margin-bottom: 1rem;
+}
 
-    .visible-sm {
-        display: block;
-    }
+.hidden-sm {
+    display: none;
+}
+
+.visible-sm {
+    display: block;
+}
+
+.text-middle {
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 @media (min-width: 992px) {
@@ -15,6 +22,10 @@
 
     .visible-md {
         display: block;
+    }
+
+    .row-md-spaced {
+        margin-bottom: 0;
     }
 }
 

@@ -5,33 +5,34 @@ use Nette\Application\UI\Control,
     App\Models,
     Nette\Utils\DateTime;
 use Tracy\Debugger;
+use Tracy\OutputDebugger;
 
 class TravelSelector extends Control
 {
     /**
-     * @persistent
+     * @var bool
+     */
+    public $override = true;
+
+    /**
      * @var string
      */
     public $name;
     /**
-     * @persistent
      * @var string
      */
     public $firstDate;
     /**
-     * @persistent
      * @var string
      */
     public $currentDate;
 
     /**
-     * @persistent
      * @var string
      */
     public $currentTravelType;
 
     /**
-     * @persistent
      * @var int
      */
     public $currentTravelProvider;
@@ -42,12 +43,16 @@ class TravelSelector extends Control
     public $dbModel;
 
     /**
-     * @persistent
-     * @var string
+     * @var DateTime
      */
-    private $minimumDate;
+    public $minimumDate;
 
-    public $onDateChange = null, $afterDateChange = null;
+    public $onDataChange = null;
+
+    /**
+     * @var int
+     */
+    public $onlyPoolCar = 0;
 
     public function __construct($name, $firstDate)
     {
@@ -72,6 +77,7 @@ class TravelSelector extends Control
         $this->template->currentDate = $this->currentDate;
         $this->template->currentTravelType = $this->currentTravelType;
         $this->template->currentTravelProvider = $this->currentTravelProvider;
+        $this->template->onlyPoolCar = $this->onlyPoolCar;
 
         $table = $this->dbModel->cityModel->table();
         $cityFromId = $table->where('name', $cityFrom)->fetch()->id;
@@ -82,6 +88,7 @@ class TravelSelector extends Control
         $table = $this->dbModel->travelModel->table();
         $table->where('city_from_id', $cityFromId);
         $table->where('travel_type.is_provider', true);
+        $table->where('trip.customer.is_confirmed', true);
         $table->where('city_to_id', $cityToId);
         $table->where('date(departure)', $this->currentDate);
 
@@ -102,21 +109,38 @@ class TravelSelector extends Control
 
     public function handleDateRowChange($amount)
     {
-        $date = DateTime::from($this->firstDate);
+        $date = DateTime::from($this->currentDate);
         $date->modify($amount);
+        $this->setDate($date);
 
-        $this->setFirstDate($date);
+        if ($this->onDataChange != null)
+            $this->onDataChange($this, 0);
+
+
+        $this->onDataUpdate();
     }
 
     public function handleDateChange($val)
     {
+        $this->currentDate = $val;
+        if ($this->onDataChange != null)
+            $this->onDataChange($this, 0);
+
         $this->setDate(DateTime::from($val));
+
+        $this->onDataUpdate();
     }
 
     public function handleChangeTravelType($travelType, $travelProvider)
     {
+        error_log("HANDLE");
         $this->currentTravelType = $travelType;
         $this->currentTravelProvider = $travelProvider;
+
+        if ($this->onDataChange != null)
+            $this->onDataChange($this, 1);
+
+        $this->onDataUpdate();
     }
 
     public function getDate()
@@ -128,16 +152,13 @@ class TravelSelector extends Control
     {
         $this->currentDate = $newDate->format('Y-m-d');
 
-        if ($this->onDateChange != null)
-            $this->onDateChange($this);
+        if ($this->onDataChange != null)
+            $this->onDataChange($this, 0);
 
         $date = DateTime::from($this->firstDate);
         $currentDate = $newDate;
         if ($currentDate < $date || $currentDate > $date->modify('+6 days'))
             $this->setFirstDate($currentDate);
-
-        if ($this->afterDateChange != null)
-            $this->afterDateChange($this);
     }
 
     public function getFirstDate()
@@ -148,11 +169,6 @@ class TravelSelector extends Control
     public function setFirstDate($newFirstDate)
     {
         $this->firstDate = $newFirstDate->format('Y-m-d');
-
-        $date = $newFirstDate;
-        $currentDate = DateTime::from($this->currentDate);
-        if($currentDate < $date || $currentDate > $date->modify('+6 days'))
-            $this->setDate($date);
     }
 
     private function generateDates()
@@ -164,15 +180,15 @@ class TravelSelector extends Control
             $date->modify('+1 day');
         }
     }
+    public function onDataUpdate()
+    {
+        $this->override = false;
+    }
 
     private function dayToSlovak($date)
     {
         switch($date)
         {
-            case 'Mon':
-                return 'Pon';
-                break;
-
             case 'Mon':
                 return 'Pon';
                 break;
