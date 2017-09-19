@@ -41,7 +41,10 @@ ALTER SEQUENCE city_id_seq OWNED BY city.id;
 CREATE TABLE customer (
     id integer NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    email character varying(100) NOT NULL
+    email character varying(100) NOT NULL,
+    phone character varying(15),
+    is_confirmed boolean NOT NULL DEFAULT false,
+    token_confirm character(32) DEFAULT NULL::bpchar
 );
 
 

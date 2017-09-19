@@ -84,7 +84,6 @@ class SearchPresenter extends BasePresenter
         $this->cityFrom = $cityFrom;
         $this->cityTo = $cityTo;
         $this->tripType = $tripType;
-        error_log("ACTION");
 
         if($this->travelSelector0->override || $this->travelSelector1->override) {
             if($departure0 != null) {
@@ -117,10 +116,10 @@ class SearchPresenter extends BasePresenter
     }
 
     public function renderShow($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1) {
+//        $this->template->deviceWidth = '850px';
         $this->template->cityFrom = $cityFrom;
         $this->template->cityTo = $cityTo;
         $this->template->tripType = $tripType;
-        error_log("RENDER");
 
         $hasRental = $this->cityModel->table()->where('name', $cityFrom)->fetchField('has_rental');
         if(!$hasRental)
@@ -157,7 +156,13 @@ class SearchPresenter extends BasePresenter
         $cityFromId = $this->cityModel->table()->where('name', $cityFrom)->fetchField('id');
         $cityToId = $this->cityModel->table()->where('name', $cityTo)->fetchField('id');
 
+        $name = explode('.', $email, 2);
         $email = $email . '@gmail.com';
+        $sender = 'gallo@xgallom.sk';
+
+        $name = $name[0];
+
+        $name = ucfirst($name);
 
         $customer = $this->customerModel->table()->where('email', $email)->fetch();
 
@@ -167,14 +172,42 @@ class SearchPresenter extends BasePresenter
                 'phone' => (strlen($phone) < 10 ? null : $phone)
             ]);
 
+//            Debugger::dump($mailConfirm->generateMessage());
+        }
+
+        if($customer->is_confirmed === false) {
+            $token_confirm = bin2hex(openssl_random_pseudo_bytes(16));
+
+            $this->customerModel->table()->where('id', $customer->id)->update([
+                'token_confirm' => $token_confirm
+            ]);
+
             $mailConfirm = new Message();
-            $mailConfirm->setFrom('gallo@xgallom.sk')
+            $mailConfirm->setFrom($sender)
                 ->addTo($email)
-                ->setSubject('Potvrdenie účtu O2 Dobrá jazda')
-                ->setBody('<a href="x5fkyk3yf2.xgallom.sk/web/mail/confirm?customer=' . $customer->id . '">Potvrdit ucet</a>');
+                ->setSubject('Vitaj v Dobrej jazde')
+                ->setHtmlBody('
+<style>
+    p {
+    color: black;
+    }
+    a {
+    #color: 
+    }
+</style>
+<div><p>Ahoj ' . $name . ',</p>
+<p>aby sme si boli istí, že si to naozaj ty, prosím, potvrď zadanie tvojej služobnej cesty cez dobrajazda.sk.</p>
+<p>Stačí, keď sa identifikuješ iba raz. Následne už od teba nebudeme požadovať nič navyše. :)</p>
+<a href="x5fkyk3yf2.xgallom.sk/web/mail/confirm?customer=' . $token_confirm . '">Áno, som to ja</a>
+<p>Ďakujeme a tešíme sa, že ti zjednodušujeme cestovanie.</p> 
+<p>Dobrá jazda</p>
+<p>Odvoz na dva kliky</p>
+<p>Ak ti prišla táto správa bez toho, aby si zadal svoj email na webe www.dobrajazda.sk, daj nám, prosím, o tom vedieť na dobrajazda@o2.sk.</p></div>
+');
 
             $this->sendmailMailer->send($mailConfirm);
-//            Debugger::dump($mailConfirm->generateMessage());
+
+            echo $token_confirm;
         }
 
         $trip = $this->tripModel->table()->insert([
@@ -202,6 +235,10 @@ class SearchPresenter extends BasePresenter
                 'spots' => $spots1 == null ? 0 : intval($spots1)
             ]);
         }
+
+        bin2hex(openssl_random_pseudo_bytes(16));
+
+        return;
 
         $this->forward('Search:request', [
             $cityFrom,
