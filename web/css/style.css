@@ -80,6 +80,10 @@ body {
   border-bottom-right-radius: .25rem;
 }
 
+.btn-inverse {
+	background-color: #FFFFFF;
+}
+
 .a-like-label {
 }
 
@@ -126,7 +130,7 @@ body {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 
-  background-color: #343a40;
+  background-color: #F8F9FA; //#343a40
 }
 
 .selector-date-select > * {
