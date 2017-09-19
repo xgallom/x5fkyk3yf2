@@ -187,27 +187,67 @@ class SearchPresenter extends BasePresenter
                 ->addTo($email)
                 ->setSubject('Vitaj v Dobrej jazde')
                 ->setHtmlBody('
+Ahoj <FirstName>,
+
+aby sme si boli istí, že si to naozaj ty, prosím, potvrď zadanie tvojej služobnej cesty cez dobrajazda.sk.
+
+Stačí, keď sa identifikuješ iba raz. Následne už od teba nebudeme požadovať nič navyše. :)
+		
+' . link('Mail:confirm', $token_confirm) . '  
+
+
+Ďakujeme a tešíme sa, že ti zjednodušujeme cestovanie. 
+
+Dobrá jazda
+Odvoz na dva kliky
+
+Ak ti prišla táto správa bez toho, aby si zadal svoj email na webe www.dobrajazda.sk, daj nám, prosím, o tom vedieť na dobrajazda@o2.sk.
+');
+                /*
+                ->setHtmlBody('
+<head>
 <style>
-    p {
-    color: black;
+    .bg {
+    background-color: #2d2e35;
+    border-radius: 8px;
+    padding: 45px 35px;
+    }
+    .fg {
+    width: 700px;
+    margin: auto;    
+    }
+    *, p, h2, h4 {
+    text-align: justify;
+    color: #d8d6d9;
     }
     a {
-    #color: 
+    text-decoration: none;
+    color: #5495d3;
+    }
+    a:hover {
+    color: #2a81d3;
+    }
+    
+    .button {
+    display: block;
+    margin: auto;
+    text-align: center;
     }
 </style>
-<div><p>Ahoj ' . $name . ',</p>
-<p>aby sme si boli istí, že si to naozaj ty, prosím, potvrď zadanie tvojej služobnej cesty cez dobrajazda.sk.</p>
-<p>Stačí, keď sa identifikuješ iba raz. Následne už od teba nebudeme požadovať nič navyše. :)</p>
-<a href="x5fkyk3yf2.xgallom.sk/web/mail/confirm?customer=' . $token_confirm . '">Áno, som to ja</a>
+</head>
+<body>
+<div class="bg"><div class="fg"><h2>Ahoj ' . $name . ',</h2>
+<p>aby sme si boli istí, že si to naozaj ty, prosím, potvrď zadanie tvojej služobnej cesty cez dobrajazda.sk.<br>
+Stačí, keď sa identifikuješ iba raz. Následne už od teba nebudeme požadovať nič navyše. :)</p>
+<h3><a class="button" href="x5fkyk3yf2.xgallom.sk/web/mail/confirm?customer=' . $token_confirm . '">Áno, som to ja</a></h3>
 <p>Ďakujeme a tešíme sa, že ti zjednodušujeme cestovanie.</p> 
-<p>Dobrá jazda</p>
-<p>Odvoz na dva kliky</p>
-<p>Ak ti prišla táto správa bez toho, aby si zadal svoj email na webe www.dobrajazda.sk, daj nám, prosím, o tom vedieť na dobrajazda@o2.sk.</p></div>
-');
+<h4 style="margin-bottom: 0; -webkit-margin-after: 0;">Dobrá jazda</h4><i>
+Odvoz na dva kliky
+<p style="text-align: center">Ak ti prišla táto správa bez toho, aby si zadal svoj email na webe www.dobrajazda.sk, daj nám, prosím, o tom vedieť na dobrajazda@o2.sk.</p></i></div></div>
+</body>
+');*/
 
             $this->sendmailMailer->send($mailConfirm);
-
-            echo $token_confirm;
         }
 
         $trip = $this->tripModel->table()->insert([
@@ -236,15 +276,13 @@ class SearchPresenter extends BasePresenter
             ]);
         }
 
-        bin2hex(openssl_random_pseudo_bytes(16));
 
-        return;
-
-        $this->forward('Search:request', [
+        $this->forward('Search:processed', [
             $cityFrom,
             $cityTo,
             $tripType
         ]);
+
     }
 
     /**

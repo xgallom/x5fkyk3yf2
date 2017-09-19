@@ -1,1 +1,18 @@
 {block content}
+
+<div class="content content-info">
+    <div class="container content-container">
+        <h2 n:block=title>Potvrdenie účtu</h2>
+
+        <p>
+        {switch $outcome}
+            {case 'success'}
+            prebehlo úspešne.
+            {case 'error'}
+            nebolo úspešné. platnosť potvrdzovacieho linku vypršala, alebo si nebol nájdený.
+        {/switch}
+        </p>
+
+        <a n:href="Search:request">Späť na hlavnú stránku</a>
+    </div>
+</div>

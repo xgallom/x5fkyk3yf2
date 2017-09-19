@@ -39,13 +39,18 @@ class MailPresenter extends BasePresenter
      */
     public $tripModel;
 
+    private $outcome = "unknown";
     public function actionConfirm($customer) {
-        $this->customerModel->table()->where('token_confirm', $customer)->update([
-            'is_confirmed' => true
-        ]);
+        $this->outcome = "error";
+        if($customer) {
+            $this->outcome =
+                $this->customerModel->table()->where('token_confirm', $customer)->update([
+                    'is_confirmed' => true
+                ]) ? "success" : "error";
+        }
     }
 
     public function renderConfirm($customer) {
-        echo "CONFIRMED, $customer";
+        $this->template->outcome = $this->outcome;
     }
 }

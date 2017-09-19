@@ -24,6 +24,7 @@ class RouterFactory
         $router[] = new Route('search/summary ? city_from=<cityFrom> & city_to=<cityTo> & trip_type=<tripType> & departure_0=<departure0> & travel_type_0=<travelType0> & travel_provider_0=<travelProvider0> & departure_1=<departure1> & travel_type_1=<travelType1> & travel_provider_1=<travelProvider1>', 'Search:summary');
         $router[] = new Route('search/show ? city_from=<cityFrom> & city_to=<cityTo> & trip_type=<tripType> & departure_0=<departure0> & travel_type_0=<travelType0> & travel_provider_0=<travelProvider0> & departure_1=<departure1> & travel_type_1=<travelType1> & travel_provider_1=<travelProvider1>', 'Search:show');
         $router[] = new Route('search/request ? city_from=<cityFrom> & city_to=<cityTo> & trip_type=<tripType>', 'Search:request');
+        $router[] = new Route('search/processed ? city_from=<cityFrom> & city_to=<cityTo> & trip_type=<tripType>', 'Search:processed');
 
         $router[] = new Route('<presenter>/<action>', 'Search:request');
 		return $router;
