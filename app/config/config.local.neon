@@ -2,5 +2,5 @@ parameters:
 
 
 database:
-	user: o2-carpool
-	password: password
+	user: o2carpool
+	password: o2carpool
