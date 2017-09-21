@@ -1,7 +1,7 @@
 {block content}
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" n:href="request, $cityFrom, $cityTo, $tripType"><img src="../img/logo_dobra_jazda_sml.png" height="40px"></a>
+    <a class="navbar-brand" href="/"><img src="../img/logo_dobra_jazda_sml.png" height="40px"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -62,19 +62,19 @@
 
             <div class="selector selector-summary">
                 <div class="row row-padded row-spaced">
-                    <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-12"><h5 class="text-dark">Kontaktné Údaje</h5></div>
+                    <div class="col text-dark col-xs-12 col-sm-12 col-lg-12 col-xl-12"><h5 class="text-dark">Kontaktné Údaje</h5></div>
                 </div>
 
                 <div class="row row-padded">
                     <div class="input-group" style="margin-left: 4.5rem; width: 20rem">
                         <span class="input-group-addon">E-Mail</span>
-                        <input class="form-control" name="email" type="text" value="">
+                        <input class="form-control" name="email" type="text" value="{$lastMail}">
                         <span class="input-group-addon">@gmail.com</span>
                     </div>
                     <div class="col col-xl-2"></div>
                     <div class="input-group" style="margin-left: 4.5rem; width: 16rem">
                         <span class="input-group-addon">Mobil</span>
-                        <input class="form-control" name="phone" type="tel" value="09">
+                        <input class="form-control" name="phone" type="tel" value="{$lastPhone}">
                     </div>
                 </div>
             </div>
@@ -82,13 +82,13 @@
             {if $travelType0 == 'car_rental'}
                 <div class="selector selector-summary">
                     <div class="row row-padded row-spaced">
-                        <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-12"><h5 class="text-dark">Kontakt na nadriadeného</h5></div>
+                        <div class="col text-dark col-xs-12 col-sm-12 col-lg-12 col-xl-12"><h5 class="text-dark">Kontakt na nadriadeného</h5></div>
                     </div>
 
                     <div class="row row-padded">
                         <div class="input-group" style="margin: auto; width: 20rem">
                             <span class="input-group-addon">E-Mail</span>
-                            <input class="form-control" name="supervisor" type="text" value="">
+                            <input class="form-control" name="supervisor" type="text" value="{$lastSuper}">
                             <span class="input-group-addon">@gmail.com</span>
                         </div>
                     </div>

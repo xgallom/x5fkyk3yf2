@@ -13,9 +13,9 @@ class TravelFinder extends Form
 
         if($default_values == null)
             $default_values = [
-                'trip_type' => 'true',
-                'city_from' => 'Bratislava',
-                'city_to' => 'Banská Bystrica'
+                'trip_type' => isset($_COOKIE['last_triptype']) ? ($_COOKIE['last_triptype'] ? 'true' : 'false'): 'true',
+                'city_from' => isset($_COOKIE['last_from']) ? $_COOKIE['last_from'] : 'Bratislava',
+                'city_to' => isset($_COOKIE['last_to']) ? $_COOKIE['last_to'] : 'Banská Bystrica'
             ];
 
         $this['trip_type'] = new \Nette\Forms\Controls\ButtonSelect('Druh jazdy', ['true' => 'Spiatočná', 'false' => 'Jednosmerná']);

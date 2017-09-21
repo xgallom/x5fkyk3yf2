@@ -1,11 +1,11 @@
 <div class="selector">
       <div class="row">
             <div class="btn-group col-lg-12 selector-head">
-                  <div class="col text-muted col-xs-12 col-sm-4 col-lg-3 col-xl-2 btn-first">{$cityFrom}</div>
-                  <div class="col text-muted           col-sm-1 col-lg-1 col-xl-1"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12></div>
-                  <div class="col text-muted           col-sm-4 col-lg-3 col-xl-2"><b>{$cityTo}</b></div>
-                  <div class="col text-muted                    col-lg-3 col-xl-5 hidden-sm visible-md"></div>
-                  <div class="col text-muted           col-sm-3 col-lg-2 col-xl-2 btn-last">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
+                  <div class="col text-dark col-xs-12 col-sm-4 col-lg-3 col-xl-2 btn-first">{$cityFrom}</div>
+                  <div class="col text-dark           col-sm-1 col-lg-1 col-xl-1"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12></div>
+                  <div class="col text-dark           col-sm-4 col-lg-3 col-xl-2"><b>{$cityTo}</b></div>
+                  <div class="col text-dark                    col-lg-3 col-xl-5 hidden-sm visible-md"></div>
+                  <div class="col text-dark           col-sm-3 col-lg-2 col-xl-2 btn-last">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
             </div>
       </div>
       <div class="row">
@@ -20,13 +20,26 @@
       </div>
 
       {foreach $dbData as $val}
-            <a class="row selector-row btn btn-block {if $onlyPoolCar == 2 || $val['spots'] == 0}disabled btn-light{elseif $currentTravelType == 'passenger' && $currentTravelProvider == $val['row']->id}btn-primary{else}btn-light{/if}" style="cursor: pointer;"
-                  n:href="changeTravelType 'passenger', $val['row']->id">
-                  <div class="col col-lg-3">{$val['row']->departure->format('d.m. H:i')}</div>
-                  <div class="col col-lg-4">{$val['row']->trip->customer->email}</div>
-                  <div class="col col-lg-2">Voľných miest: {$val['spots']}</div>
-                  <div class="col col-lg-3">Pridať sa k posádke</div>
-            </a>
+          <div class="row selector-row btn btn-block bg-white">
+                <div class="col col-lg-3">
+                      <div class="row text-muted"><small>Odchod:</small></div>
+                      <div class="row">{$val['row']->departure->format('d.m. H:i')}</div>
+                </div>
+                <div class="col col-lg-4">
+                      <div class="row text-muted"><small>Vodič:</small></div>
+                      <div class="row">{$val['row']->trip->customer->name_first} {$val['row']->trip->customer->name_last}</div>
+                </div>
+                <div class="col col-lg-2">
+                      <div class="row text-muted"><small>Voľných miest: </small></div>
+                      <div class="row">{$val['spots']}</div>
+                </div>
+            <div class="col col-lg-3">
+                  <a class="btn btn-block {if $onlyPoolCar == 2 || $val['spots'] == 0}disabled btn-light{elseif $currentTravelType == 'passenger' && $currentTravelProvider == $val['row']->id}btn-success{else}btn-primary{/if}" style="cursor: pointer;"
+                          n:href="changeTravelType 'passenger', $val['row']->id">
+                        Pridať sa k posádke
+                  </a>
+            </div>
+          </div>
       {/foreach}
 
       <div id="accordion_{$name}" class="selector-accordion" role="tablist">

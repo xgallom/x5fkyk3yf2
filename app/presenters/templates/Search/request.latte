@@ -3,7 +3,7 @@
 {block content}
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" n:href="request"><img src="../img/logo_dobra_jazda_sml.png" height="40px"></a>
+      <a class="navbar-brand" href="/"><img src="../img/logo_dobra_jazda_sml.png" height="40px"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -31,8 +31,4 @@
 
     </div><!-- /.container -->
 
-    <script>
-        var availableCities = [
-            {foreach $cities as $city}{$city},{/foreach}
-        ];
-    </script>
+    <script>var availableCities = [{foreach $cities as $city}{$city},{/foreach}];</script>

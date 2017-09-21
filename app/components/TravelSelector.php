@@ -91,12 +91,22 @@ class TravelSelector extends Control
         $table->where('trip.customer.is_confirmed', true);
         $table->where('city_to_id', $cityToId);
         $table->where('date(departure)', $this->currentDate);
+        $table->order('departure');
 
         $dbData = $table->fetchAll();
 
         $this->template->dbData = [];
-        foreach($dbData as $val)
-            array_push($this->template->dbData, [ 'row' => $val, 'spots' => $val->spots - $this->dbModel->travelModel->table()->where('travel_provider_id', $val->id)->count()]);
+        $n = 0;
+        foreach($dbData as $val) {
+            if($n++ > 10)
+                break;
+            array_push($this->template->dbData, [
+                'row' => $val,
+                'spots' => $val->spots - $this->dbModel->travelModel->table()
+                        ->where('trip.is_approved', true)->where('trip.customer.is_confirmed', true)->where('travel_provider_id', $val->id)
+                            ->count()
+            ]);
+        }
 
         $this->template->collapseShownList = [];
         foreach($this->dbModel->travelTypeModel->table()->where('name != ?', 'passenger')->fetchAll() as $row)

@@ -26,6 +26,9 @@ services:
 	travelTypeModel: App\Models\TravelTypeModel
 	tripModel: App\Models\TripModel
 	sendmailMailer: Nette\Mail\SendmailMailer
+	authenticator: Nette\Security\SimpleAuthenticator([
+            GhDxI1FqJ4: WsCwZK6bHO
+        ])
 
 extensions:
     nextras.form: Nextras\Forms\Bridges\NetteDI\FormsExtension

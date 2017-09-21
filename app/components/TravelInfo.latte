@@ -18,7 +18,7 @@
         <div class="row row-padded">
             <div class="col col-xl-2"></div>
             <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-5 text-left"><b>{$time}</b></div>
-            <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-4 text-right"><b>{$dbData->trip->customer->email}</b></div>
+            <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-4 text-right"><b>{$dbData->trip->customer->name_first} {$dbData->trip->customer->name_last}</b></div>
         </div>
         <div class="row row-padded">
             <div class="col col-xl-2"></div>
@@ -29,7 +29,7 @@
         <div class="row row-padded">
             <div class="input-group" style="margin-left: 6rem; width: 15rem">
                 <span class="input-group-addon">Čas odjazdu</span>
-                <input class="form-control" name="departure_time_{$id}" type="time" value="{switch $tripStep}{case 'false'}08:00:00{case 'true'}15:00:00{/switch}" {if $travelType['val'] == 'car_rental'}readonly{/if}>
+                <input class="form-control" name="departure_time_{$id}" type="time" value="{switch $tripStep}{case 'false'}08:00:00{case 'true'}15:00:00{/switch}">
             </div>
             <div class="col col-xl-4"></div>
             <div class="input-group" style="margin-left: 2.5rem; width: 16rem">

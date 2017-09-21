@@ -58,6 +58,17 @@ body {
   text-align: center;
 }
 
+.admin-container {
+  margin-top: 5rem;
+  margin-bottom: 1rem;
+}
+
+.admin-template {
+  padding: .5rem;
+  padding-bottom: 0;
+  text-align: center;
+}
+
 .input-row {
   padding-bottom: 1rem;
 }

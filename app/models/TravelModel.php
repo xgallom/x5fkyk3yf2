@@ -69,4 +69,21 @@ ORDER BY t.departure ASC
 
         return $result->fetchAll();
     }
+
+    /**
+     * Obalka nad prikazom table. Aby som stale nemusel vypisovat
+     * $this->db->table('model_table')->nieco ale rovno $this->table()->ides
+     *
+     * @return  Nette\Database\Table\Selection
+     * @throws  \Exception
+     */
+    public function table()
+    {
+        if ($this->_table == null) {
+            throw new \Exception('Nieje zadefinovaná "_table" pre model!');
+        }
+
+        // TODO: override
+        return $this->db->table($this->_table);
+    }
 }
