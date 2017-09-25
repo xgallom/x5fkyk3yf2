@@ -1,0 +1,27 @@
+{* This is the welcome page, you can delete it *}
+
+{block content}
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/"><img src="../img/logo_dobra_jazda_sml.png" height="40px"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <ul class="breadcrumb breadcrumb-navbar bg-dark">
+                <li class="breadcrumb-item active">Prihlásenie</li>
+            </ul>
+        </ul>
+    </div>
+</nav>
+
+<div class="container start-container">
+    <div class="starter-template">
+        <div class="header-logo"></div>
+        <p class="lead">Prihlásenie</p>
+        {control loginForm}
+    </div>
+
+</div><!-- /.container -->

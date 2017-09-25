@@ -72,7 +72,9 @@ class SearchPresenter extends BasePresenter
         $this->travelSelector1->onlyPoolCar = 1;
     }
 
-    public function renderList() {
+    public function renderList($mobile) {
+        $this->mobile = $this->template->mobile = $mobile;
+
         $table = $this->travelModel->table()->where('travel_type.is_provider', true);
         $table->where('travel_type.is_provider', true);
         $table->where('trip.customer.is_confirmed', true);
@@ -192,7 +194,7 @@ class SearchPresenter extends BasePresenter
         $this->template->headerTitle = "Vyhľadané spojenia";
     }
 
-    public function actionSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1)
+    public function actionSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $error)
     {
         // TODO: implement weekends
         $date = DateTime::from(Date('Y-m-d'))->modify('+1 day');
@@ -202,7 +204,7 @@ class SearchPresenter extends BasePresenter
             $this->forward('Search:notify');
     }
 
-    public function renderSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1)
+    public function renderSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $error)
     {
         $this->template->lastMail = isset($_COOKIE['last_mail']) ? $_COOKIE['last_mail'] : '';
         $this->template->lastPhone = isset($_COOKIE['last_phone']) ? $_COOKIE['last_phone'] : '09';
@@ -218,6 +220,8 @@ class SearchPresenter extends BasePresenter
         $this->template->departure1 = $departure1;
         $this->template->travelType1 = $travelType1;
         $this->template->travelProvider1 = $travelProvider1;
+
+        $this->template->error = $error;
     }
 
     public function actionSubmit($cityFrom, $cityTo, $tripType,
@@ -226,6 +230,37 @@ class SearchPresenter extends BasePresenter
                                  $departureTime0, $spots0, $departureTime1, $spots1,
                                  $email, $phone, $supervisor)
     {
+        $error = false;
+        if(empty($email))
+            $error = "email";
+
+        if($travelType0 == 'car_rental') {
+            if (empty($supervisor))
+                $error = "supervisor";
+        }
+        else if($travelType0 == 'car_personal' || $travelType0 == 'car_company')
+            if(intval($spots0) < 1 || intval($spots0) > 4)
+                $error = "spots0";
+
+        if($tripType == 'true')
+            if($travelType1 == 'car_personal' || $travelType1 == 'car_company')
+                if(intval($spots1) < 1 || intval($spots1) > 4)
+                    $error = "spots1";
+
+        if($error != false)
+            $this->forward('Search:summary', [
+                $cityFrom,
+                $cityTo,
+                $tripType,
+                $this->travelSelector0->currentDate,
+                $this->travelSelector0->currentTravelType,
+                $this->travelSelector0->currentTravelProvider,
+                $this->travelSelector1->currentDate,
+                $this->travelSelector1->currentTravelType,
+                $this->travelSelector1->currentTravelProvider,
+                $error
+            ]);
+
         setcookie('last_mail', $email, time()+60*60*24*30);
         setcookie('last_phone', $phone, time()+60*60*24*30);
         setcookie('last_super', $supervisor, time()+60*60*24*30);

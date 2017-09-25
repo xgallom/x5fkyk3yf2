@@ -1,0 +1,1 @@
+DELETE FROM city WHERE name LIKE '%-%';
