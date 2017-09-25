@@ -8,7 +8,7 @@ body {
 
 .form-container {
   text-align: left;
-  padding: 3rem;
+  padding: 1rem;
 }
 
 .form-group {
@@ -37,6 +37,10 @@ body {
   margin: 0;
 }
 
+.navbar-brand {
+	margin-right: 0;
+}
+
 @media (min-width: 992px) {
   .breadcrumb-navbar {
     float: right;
@@ -58,7 +62,7 @@ body {
 }
 
 .starter-template {
-  padding: 1.5rem;
+  padding: 1rem;
   padding-bottom: 0;
   text-align: center;
 }
@@ -218,3 +222,27 @@ a:hover {
   margin: auto;
 }
 
+.input-group {
+	margin-left: 6rem;
+	width: 15rem;
+}
+
+.responsive-title {
+	max-width: 100%;
+}
+
+@media screen and (max-width: 720px) {
+	.card-body {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.responsive-title {
+		min-width: 100%;
+	}
+	.text-middle {
+		text-align: center;
+	}
+	.selector-head {
+		vertical-align: middle;
+	}
+}
