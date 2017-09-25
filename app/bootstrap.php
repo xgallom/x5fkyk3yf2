@@ -16,7 +16,7 @@ $configurator->createRobotLoader()
 
 $configurator->addConfig(__DIR__ . '/config/config.neon');
 $config_local = __DIR__ . '/config/config.local.neon';
-if (file_exists($config_local) && Nette\Configurator::detectDebugMode()) {
+if (file_exists($config_local)) {
 	$configurator->addConfig($config_local);
 }
 

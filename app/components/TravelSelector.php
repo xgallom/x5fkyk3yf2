@@ -15,6 +15,11 @@ class TravelSelector extends Control
     public $override = true;
 
     /**
+     * @var bool
+     */
+    public $mobile = false;
+
+    /**
      * @var string
      */
     public $name;
@@ -78,6 +83,7 @@ class TravelSelector extends Control
         $this->template->currentTravelType = $this->currentTravelType;
         $this->template->currentTravelProvider = $this->currentTravelProvider;
         $this->template->onlyPoolCar = $this->onlyPoolCar;
+        $this->template->mobile = $this->mobile;
 
         $table = $this->dbModel->cityModel->table();
         $cityFromId = $table->where('name', $cityFrom)->fetch()->id;
@@ -98,14 +104,23 @@ class TravelSelector extends Control
         $this->template->dbData = [];
         $n = 0;
         foreach($dbData as $val) {
-            if($n++ > 10)
-                break;
-            array_push($this->template->dbData, [
-                'row' => $val,
-                'spots' => $val->spots - $this->dbModel->travelModel->table()
-                        ->where('trip.is_approved', true)->where('trip.customer.is_confirmed', true)->where('travel_provider_id', $val->id)
+            $approved = false;
+            if($val->is_approved == null)
+                $approved = $val->trip->is_approved;
+            else
+                $approved = $val->is_approved;
+
+            if($approved) {
+                if($n++ > 10)
+                    break;
+
+                array_push($this->template->dbData, [
+                    'row' => $val,
+                    'spots' => $val->spots - $this->dbModel->travelModel->table()
+                            ->where('trip.is_approved', true)->where('trip.customer.is_confirmed', true)->where('travel_provider_id', $val->id)
                             ->count()
-            ]);
+                ]);
+            }
         }
 
         $this->template->collapseShownList = [];
@@ -143,7 +158,6 @@ class TravelSelector extends Control
 
     public function handleChangeTravelType($travelType, $travelProvider)
     {
-        error_log("HANDLE");
         $this->currentTravelType = $travelType;
         $this->currentTravelProvider = $travelProvider;
 
@@ -185,7 +199,7 @@ class TravelSelector extends Control
     {
         $this->template->dateList = [];
         $date = DateTime::from($this->firstDate);
-        for($i = 0; $i < 7; $i++) {
+        for($i = 0; $i < ($this->mobile ? 4 : 7); $i++) {
             array_push($this->template->dateList, ['val' => $date->format('Y-m-d'), 'date_val' => clone $date, 'day' => $this->dayToSlovak($date->format('D')), 'str' => $date->format('d.m.')]);
             $date->modify('+1 day');
         }

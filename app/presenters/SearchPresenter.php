@@ -70,21 +70,33 @@ class SearchPresenter extends BasePresenter
         $table = $this->travelModel->table()->where('travel_type.is_provider', true);
         $table->where('travel_type.is_provider', true);
         $table->where('trip.customer.is_confirmed', true);
-        $table->order('departure')->limit(10);
+        $table->order('departure');
 
         $dbData = $table->fetchAll();
 
         $this->template->dbData = [];
+        $n = 0;
         foreach($dbData as $val) {
-            array_push($this->template->dbData, [
-                'row' => $val,
-                'datestr' => DateTime::from($val->departure)->format('j.n.Y G:i'),
-                'date' => DateTime::from($val->departure)->format('Y-m-d'),
-                'time' => DateTime::from($val->departure)->format('H:i'),
-                'spots' => $val->spots - $this->travelModel->table()
-                        ->where('trip.is_approved', true)->where('trip.customer.is_confirmed', true)->where('travel_provider_id', $val->id)
-                        ->count()
-            ]);
+            $approved = false;
+            if($val->is_approved == null)
+                $approved = $val->trip->is_approved;
+            else
+                $approved = $val->is_approved;
+
+            if($approved) {
+                if ($n++ > 10)
+                    break;
+
+                array_push($this->template->dbData, [
+                    'row' => $val,
+                    'datestr' => DateTime::from($val->departure)->format('j.n.Y G:i'),
+                    'date' => DateTime::from($val->departure)->format('Y-m-d'),
+                    'time' => DateTime::from($val->departure)->format('H:i'),
+                    'spots' => $val->spots - $this->travelModel->table()
+                            ->where('trip.is_approved', true)->where('trip.customer.is_confirmed', true)->where('travel_provider_id', $val->id)
+                            ->count()
+                ]);
+            }
         }
 
         $this->template->dbDate = $dbData;
@@ -147,8 +159,11 @@ class SearchPresenter extends BasePresenter
             $this->travelSelector1->onlyPoolCar = 1;
     }
 
-    public function renderShow($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1) {
+    public function renderShow($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $mobile) {
 //        $this->template->deviceWidth = '850px';
+        $this->template->mobile = $mobile;
+        $this->travelSelector0->mobile = $this->travelSelector1->mobile = $mobile == 'true' ? true : false;
+
         $this->template->cityFrom = $cityFrom;
         $this->template->cityTo = $cityTo;
         $this->template->tripType = $tripType;
@@ -210,11 +225,11 @@ class SearchPresenter extends BasePresenter
         $superName = ucfirst($superName[0]);
 
         $name = explode('.', $email, 2);
-        $email = $email . '@gmail.com';
-        $supervisor = $supervisor . '@gmail.com';
+        $email = $email . '@o2.sk';
+        $supervisor = $supervisor . '@o2.sk';
         $bohus = 'minion1696@gmail.com';
-        $sender = 'gallo@xgallom.sk';
-        $domain = 'http://o2-carpool.xgallom.sk/web';
+        $sender = 'o2@dobrajazda.sk';
+        $domain = 'http://beta.dobrajazda.sk/web';
 
         $firstName = $name[0];
         $lastName = null;

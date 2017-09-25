@@ -53,4 +53,8 @@ class MailPresenter extends BasePresenter
     public function renderConfirm($customer) {
         $this->template->outcome = $this->outcome;
     }
+
+    public function actionNotify() {
+        // TODO: 24h notifications
+    }
 }
