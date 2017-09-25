@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="row row-padded row-spaced">
-        <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-5"><b>{$travelType['str']}</b></div>
+        <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-5 responsive-title"><b>{$travelType['str']}</b></div>
         <div class="col text-dark                    col-lg-2 col-xl-4 hidden-sm visible-md"></div>
         <div class="col text-dark           col-sm-3 col-lg-2 col-xl-3">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
     </div>
@@ -27,12 +27,12 @@
         </div>
     {elseif $travelType['val'] == 'car_company' || $travelType['val'] == 'car_personal' || $travelType['val'] == 'car_rental'}
         <div class="row row-padded">
-            <div class="input-group" style="margin-left: 6rem; width: 15rem">
+            <div class="input-group">
                 <span class="input-group-addon">Čas odjazdu</span>
                 <input class="form-control" name="departure_time_{$id}" type="time" value="{switch $tripStep}{case 'false'}08:00:00{case 'true'}15:00:00{/switch}">
             </div>
             <div class="col col-xl-4"></div>
-            <div class="input-group" style="margin-left: 2.5rem; width: 16rem">
+            <div class="input-group">
                 <span class="input-group-addon">Počet voľných sedadiel</span>
                 <input type="number" class="form-control" name="spots_{$id}" min="0" value="3" max="99" {if $travelType['val'] == 'car_rental'}readonly{/if}>
             </div>
