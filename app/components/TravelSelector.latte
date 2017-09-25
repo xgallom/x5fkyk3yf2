@@ -10,12 +10,20 @@
       </div>
       <div class="row">
             <div class="btn-group col-sm-12 selector-date-select">
-                  <a class="btn btn-inverse col-lg-date btn-halfrow {if $backDisabled} disabled{/if}" n:href="dateRowChange '-7 days'"><img src="../img/glyphicons/png/glyphicons-211-arrow-left.png" width=16></a>
+                {if $mobile}
+                      <a class="btn btn-inverse col-lg-date btn-halfrow {if $backDisabled} disabled{/if}" n:href="dateRowChange '-4 days'"><img src="../img/glyphicons/png/glyphicons-211-arrow-left.png" width=16></a>
+                {else}
+                      <a class="btn btn-inverse col-lg-date btn-halfrow {if $backDisabled} disabled{/if}" n:href="dateRowChange '-7 days'"><img src="../img/glyphicons/png/glyphicons-211-arrow-left.png" width=16></a>
+                {/if}
                   {foreach $dateList as $date}
                         <a class="btn col-lg-2 {if $date['val'] == $currentDate} btn-primary{elseif $date['date_val'] < $minimumDate} btn-inverse disabled{else} btn-inverse{/if}"
                           n:href="dateChange $date['val']">{$date['day']}<br>{$date['str']}</a>
                   {/foreach}
-                  <a class="btn btn-inverse col-lg-0 btn-halfrow" n:href="dateRowChange '+7 days'"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=16></a>
+                  {if $mobile}
+                        <a class="btn btn-inverse col-lg-0 btn-halfrow" n:href="dateRowChange '+4 days'"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=16></a>
+                  {else}
+                        <a class="btn btn-inverse col-lg-0 btn-halfrow" n:href="dateRowChange '+7 days'"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=16></a>
+                  {/if}
             </div>
       </div>
 
