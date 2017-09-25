@@ -15,6 +15,11 @@ body {
   margin-bottom: 1rem;
 }
 
+.btn-primary.active {
+	background-color: #28a745;
+	border-color: #189735;
+}
+
 .btn-form {
   margin-top: 3rem;
 }
