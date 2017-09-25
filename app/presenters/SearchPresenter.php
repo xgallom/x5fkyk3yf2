@@ -54,6 +54,12 @@ class SearchPresenter extends BasePresenter
      */
     public $cityFrom = null, $cityTo = null, $tripType = null;
 
+    /**
+     * @var bool
+     * @persistent
+     */
+    public $mobile = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -116,7 +122,7 @@ class SearchPresenter extends BasePresenter
         }
     }
 
-    public function actionShow($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1) {
+    public function actionShow($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $mobile) {
         setcookie('last_from', $cityFrom, time()+60*60*24*30);
         setcookie('last_to', $cityTo, time()+60*60*24*30);
         setcookie('last_triptype', $tripType, time()+60*60*24*30);
@@ -133,7 +139,7 @@ class SearchPresenter extends BasePresenter
             if($departure0 != null) {
                 $this->travelSelector0->currentDate = $departure0;
 
-                $firstDate = DateTime::from($departure0)->modify("-3 days");
+                $firstDate = DateTime::from($departure0)->modify($mobile ? "-1 days" : "-3 days");
                 $this->travelSelector0->firstDate = $firstDate < $this->travelSelector0->minimumDate ? $this->travelSelector0->minimumDate : $firstDate->format("Y-m-d");
             }
             if ($travelType0 != null)
@@ -144,7 +150,7 @@ class SearchPresenter extends BasePresenter
             if($departure1 != null) {
                 $this->travelSelector1->currentDate = $departure1;
 
-                $firstDate = DateTime::from($departure1)->modify("-3 days");
+                $firstDate = DateTime::from($departure1)->modify($mobile ? "-1 days" : "-3 days");
                 $this->travelSelector1->firstDate = $firstDate < $this->travelSelector1->minimumDate ? $this->travelSelector1->minimumDate : $firstDate->format("Y-m-d");
             }
             if($travelType1 != null)
@@ -161,12 +167,18 @@ class SearchPresenter extends BasePresenter
 
     public function renderShow($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $mobile) {
 //        $this->template->deviceWidth = '850px';
-        $this->template->mobile = $mobile;
-        $this->travelSelector0->mobile = $this->travelSelector1->mobile = $mobile == 'true' ? true : false;
+        $this->mobile = $this->template->mobile = $mobile;
+        $this->travelSelector0->mobile = $this->travelSelector1->mobile = $mobile == '1' ? true : false;
 
         $this->template->cityFrom = $cityFrom;
         $this->template->cityTo = $cityTo;
         $this->template->tripType = $tripType;
+        $this->template->departure0 = $departure0;
+        $this->template->travelType0 = $travelType0;
+        $this->template->travelProvider0 = $travelProvider0;
+        $this->template->departure1 = $departure1;
+        $this->template->travelType1 = $travelType1;
+        $this->template->travelProvider1 = $travelProvider1;
 
         $hasRental = $this->cityModel->table()->where('name', $cityFrom)->fetchField('has_rental');
         if(!$hasRental)
@@ -719,7 +731,8 @@ Odvoz na dva kliky
             $ts0->currentTravelProvider,
             $ts1->currentDate,
             $ts1->currentTravelType,
-            $ts1->currentTravelProvider
+            $ts1->currentTravelProvider,
+            $this->mobile
         ]);
 
         //$this->travelSelector0->override = $this->travelSelector1->override = false;

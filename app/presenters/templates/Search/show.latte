@@ -70,12 +70,11 @@
           parser.search = '?' + list.join('&');
           return parser.href;
       }
-
       if($(window).width() < 992) {
-          if({$mobile} !== 'true')
-            window.location.replace(URL_add_parameter(window.location.href, 'mobile', 'true'));
+          if({$mobile} !== true)
+            window.location.replace({link show $cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, mobile => true});
       }
-      else if({$mobile} === 'true')
-          window.location.replace(URL_add_parameter(window.location.href, 'mobile', 'false'));
+      else if({$mobile} === true)
+          window.location.replace({link show $cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, mobile => false});
   </script>
 </div><!-- /.container -->
