@@ -12,21 +12,11 @@
         <th class="text-center">
             Vodič
         </th>
-        {if $mobile}
-            </tr>
-            <tr>
-        {/if}
         <th class="text-center">
             Počet voľných miest
         </th>
         <th>
-
         </th>
-        {if $mobile}
-            <th>
-
-            </th>
-        {/if}
     </tr>
     </thead>
     <tbody>
@@ -43,18 +33,9 @@
             <td>
                 {$row['row']->trip->customer->name_first} {$row['row']->trip->customer->name_last}
             </td>
-        {if $mobile}
-            </tr>
-            <tr>
-        {/if}
             <td>
                 {$row['spots']}
             </td>
-        {if $mobile}
-            <td>
-
-            </td>
-        {/if}
             <td>
                 <a class="btn btn-primary" target="_parent"
                         n:href="summary $row['row']->city_from->name, $row['row']->city_to->name, tripType => 'false', departure0 => $row['date'], departureTime0 => $row['time'], travelType0 => passenger, travelProvider0 => $row['row']->id">
@@ -63,6 +44,27 @@
             </td>
         </tr>
     {/foreach}
+    <tr class="text-center">
+            <td>
+                29/9/2017 18:15
+            </td>
+            <td>
+                Bratislava
+                <img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12>
+                Banska Bystrica
+            </td>
+            <td>
+                Andrej Zlamala
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                <a class="btn btn-primary">
+                    Pridať sa k posádke
+                </a>
+            </td>
+        </tr>
     </tbody>
 </table>
 <script>
