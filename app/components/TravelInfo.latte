@@ -34,7 +34,7 @@
             <div class="col col-xl-4"></div>
             <div class="input-group">
                 <span class="input-group-addon">Počet voľných sedadiel</span>
-                <input type="number" class="form-control" name="spots_{$id}" min="0" value="3" max="99" {if $travelType['val'] == 'car_rental'}readonly{/if}>
+                <input type="number" class="form-control" name="spots_{$id}" min="1" value="3" max="4" {if $travelType['val'] == 'car_rental'}readonly{/if}>
             </div>
         </div>
     {/if}

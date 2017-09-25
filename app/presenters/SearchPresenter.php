@@ -258,7 +258,7 @@ class SearchPresenter extends BasePresenter
                 $this->travelSelector1->currentDate,
                 $this->travelSelector1->currentTravelType,
                 $this->travelSelector1->currentTravelProvider,
-                $error
+                'error' => $error
             ]);
 
         setcookie('last_mail', $email, time()+60*60*24*30);
