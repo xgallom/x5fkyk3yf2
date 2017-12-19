@@ -2,11 +2,24 @@
 
 <div class="content content-info">
   <div class="container content-container">
-    <h2 n:block=title>Tvoja cesta bola úspešne zadaná.</h2>
+    <h2 n:block=title>{if $error}Vyskytla sa chyba.{else}Tvoja cesta bola úspešne zadaná.{/if}</h2>
     <p>
-      Pozri si svoju e-mailovú schránku pre potvrdzovacie e-maily.
+    {if $error}
+        {switch $errormsg}
+            {case 'email'}
+          Nezadal si správnu e-mailovú adresu.
+            {case 'supervisor'}
+          Nezadal si správnu e-mailovú adresu nadriadeného.
+            {case 'spots'}
+          Nezadal si správny počet miest na sedenie.
+            {case 'duplicate'}
+          Na tento deň už máš zadanú jazdu.
+        {/switch}
+    {else}
+        Pozri si svoju e-mailovú schránku pre potvrdzovacie e-maily.
+    {/if}
     </p>
 
-    <a n:href="Search:request">Späť na hlavnú stránku</a>
+    <a href="{if $error}/search/request{else}/{/if}">Späť na hlavnú stránku</a>
   </div>
 </div>

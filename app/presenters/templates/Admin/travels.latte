@@ -30,26 +30,44 @@
             </thead>
             <tbody>
             {foreach $trip as $tr}
-                <tr>
+		{if $tr->is_approved == true}
+                <tr class="main-row">
                     <td>{$tr->id}</td>
                     <td>{$tr->customer->email}</td>
                     <td>{if $tr->is_approved == true && $tr->customer->is_confirmed == true}Áno{else}Nie{/if}</td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>{if $tr->is_approved == true && $tr->customer->is_confirmed == true}<a n:href="travels 'remove', $tr->id"><img src="/web/img/glyphicons/png/glyphicons-208-remove.png" width=12></a>{/if}</td>
+                    <td>{if $tr->is_approved == true}<a n:href="travels 'remove', $tr->id"><img src="/img/glyphicons/png/glyphicons-208-remove.png" width=12></a>{/if}</td>
                 </tr>
-                {foreach $tr->related('travel.trip_id')->order('departure')->fetchAll() as $travel}
+            {foreach $tr->related('travel.trip_id')->order('departure')->fetchAll() as $travel}
+                {if $travel->is_approved == true || $travel->is_approved == null}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{if $travel->travel_type_id === $travelType['passenger']}{$travel->travel_provider->departure}{else}{$travel->departure}{/if}</td>
+                    <td>{$travel->city_from->name} -> {$travel->city_to->name}</td>
+                    <td>{array_search($travel->travel_type_id, $travelType)}</td>
+                    <td></td>
+                </tr>
+                {foreach $travel->related('travel.travel_provider_id')->fetchAll() as $passenger}
+                    {if ($passenger->is_approved == true || ($passenger->is_approved == null && $passenger->trip->is_approved == true))}
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{if $travel->travel_type_id === $travelType['passenger']}{$travel->travel_provider->departure}{else}{$travel->departure}{/if}</td>
-                        <td>{$travel->city_from->name} -> {$travel->city_to->name}</td>
-                        <td>{array_search($travel->travel_type_id, $travelType)}</td>
+                        <td></td>
+                        <td></td>
+                        <td>{$passenger->trip->customer->name_first} {$passenger->trip->customer->name_last}</td>
+                        <td>passenger</td>
                         <td></td>
                     </tr>
+                    {/if}
                 {/foreach}
+                {/if}
+            {/foreach}
+		{/if}
             {/foreach}
             </tbody>
         </table>

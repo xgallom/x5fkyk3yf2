@@ -6,9 +6,11 @@ use Components\LoginForm;
 use Nette,
     App\Models,
     Nette\Application\UI,
-    Nette\Mail\Message,
     Nette\Utils\DateTime,
+    Nette\Mail\Message,
     Nette\Mail\SendmailMailer;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Tracy\Debugger;
 
 
@@ -67,9 +69,7 @@ class AdminPresenter extends BasePresenter
 
     private function remove($id)
     {
-        $bohus = 'minion1696@gmail.com';
-        $sender = 'o2@dobrajazda.sk';
-        $domain = 'http://beta.dobrajazda.sk/web';
+        include('emails/config.php');
 
 //----------------------------------------------------------------------------------------------------------------------Zrusenie pasazierov
         foreach ($this->tripModel->table()->where('id', $id)->where('is_approved', true)->fetchAll() as $trip) {
@@ -273,6 +273,27 @@ Dobrá jazda
         }
     }
 
+    public function actionShutdown() {
+        if(!$this->user->isLoggedIn())
+            $this->forward('Admin:login');
+
+        unlink(__DIR__ . '/../config/config.local.neon');
+        unlink(__DIR__ . '/../config/config.neon');
+        unlink(__DIR__ . '/../router/RouterFactory.php');
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(__DIR__ . '/templates', RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($files as $fileinfo) {
+            $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+            $todo($fileinfo->getRealPath());
+        }
+
+        $this->forward('Admin:login');
+    }
+
     public function actionTravels($rowAction, $id) {
         if(!$this->user->isLoggedIn())
             $this->forward('Admin:login');
@@ -283,7 +304,14 @@ Dobrá jazda
     }
 
     public function renderTravels($rowAction, $id) {
-        $this->template->trip = $this->tripModel->table()->order('created DESC');
+        $trip = $this->tripModel->table()->order('created DESC')->fetchAll();
+
+        $this->template->trip = [];
+        foreach($trip as $tr) {
+            $travel = $tr->related('travel.trip_id')->fetch();
+            if($travel != null && DateTime::from($travel->departure) >= DateTime::from(date('Y-m-d')))
+                array_push($this->template->trip, $tr);
+        }
 
         $travelType = [];
         foreach($this->travelTypeModel->table()->fetchAll() as $tr)
@@ -312,5 +340,22 @@ Dobrá jazda
             $this->forward('Admin:travels');
         else
             $this->forward('Admin:login', ['badlogin' => 'true']);
+    }
+
+    private $outcome = "unknown";
+    public function actionRemove($trip) {
+        $this->outcome = "error";
+        if($trip) {
+            $row = $this->tripModel->table()->where('token_remove LIKE ?', '%' . $trip . '%')->fetch();
+            if($row != null) {
+                $this->remove($row->id);
+                $this->outcome = "success";
+            }
+        }
+    }
+
+    public function renderRemove($trip) {
+        $this->template->outcome = $this->outcome;
+        $this->template->deviceWidth = true;
     }
 }

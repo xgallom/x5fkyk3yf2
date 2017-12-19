@@ -3,7 +3,10 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width={if isset($deviceWidth)}{$deviceWidth}{else}550px{/if}, shrink-to-fit=no">
+    <meta name="viewport" content="{if isset($deviceWidth)}initial-scale=1, {else}width=550px, {/if}shrink-to-fit=no">
+
+    <!-- Place your favicon.ico and apple-touch-icon.png in the template root directory -->
+    <link href="/web/favicon.ico" rel="shortcut icon">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{$basePath}/css/jquery-ui.css">

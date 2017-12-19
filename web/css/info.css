@@ -2,13 +2,12 @@
     padding: 10rem 4.5rem;
     position: absolute;
     width: 100%;
-    min-width: 550px;
     height: 100%;
     background-color: #2d2e35;
 }
 
 .content-info > .content-container {
-    width: 45rem;
+#    width: 45rem;
     color: #d8d6d9;
 }
 

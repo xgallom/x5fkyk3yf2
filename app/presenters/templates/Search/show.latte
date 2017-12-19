@@ -17,30 +17,35 @@
 <div class="container main-container">
 
   <div class="starter-template">
-    <div class="row show-header">
-      <div class="col col-lg-3 text-left responsive-title"><h5 class="text-middle">Vyhľadané spojenia</h5></div>
-      <div class="col col-lg-2 btn btn-sm text-left">
-          {switch $tripType}
-              {case 'true'}Spiatočná cesta
-              {case 'false'}Jednosmerná cesta
-          {/switch}
+    <div class="container">
+      <div class="container show-header">
+        <div class="row">
+          <div class="col col-lg-3 text-left responsive-title"><h5 class="text-middle">Vyhľadané spojenia</h5></div>
+          <div class="col col-lg-2 btn btn-sm text-left">
+              {switch $tripType}
+                  {case 'true'}Spiatočná cesta
+                  {case 'false'}Jednosmerná cesta
+              {/switch}
+          </div>
+          <div class="col col-lg-2 btn btn-sm"><b>{$cityFrom}</b></div>
+          <div class="col col-lg-1 btn btn-sm"><img src="../img/glyphicons/png/glyphicons-212-arrow-right-light.png" width=12></div>
+          <div class="col col-lg-2 btn btn-sm"><b>{$cityTo}</b></div>
+          <div class="col col-lg-2"><a class="btn btn-block btn-primary btn-sm" n:href="request, $cityFrom, $cityTo, $tripType">Zmeniť trasu</a></div>
+
+        </div>
       </div>
-      <div class="col col-lg-2 btn btn-sm"><b>{$cityFrom}</b></div>
-      <div class="col col-lg-1 btn btn-sm"><img src="../img/glyphicons/png/glyphicons-212-arrow-right-light.png" width=12></div>
-      <div class="col col-lg-2 btn btn-sm"><b>{$cityTo}</b></div>
-      <div class="col col-lg-2"><a class="btn btn-block btn-primary btn-sm" n:href="request, $cityFrom, $cityTo, $tripType">Zmeniť trasu</a></div>
-
     </div>
 
-    {control travelSelector0 $cityFrom, $cityTo, 'false', date('Y-m-d')}
 
-    {if $tripType == 'true'}
-        {control travelSelector1 $cityTo, $cityFrom, 'true', date('Y-m-d')}
-    {/if}
+      {control travelSelector0 $cityFrom, $cityTo, 'false', date('Y-m-d')}
 
-    <div class="row">
-      <a class="btn btn-primary btn-block btn-big{if !$allowedInput} disabled{/if}" n:href="summary $cityFrom, $cityTo, $tripType, $travelSelector0->currentDate, $travelSelector0->currentTravelType, $travelSelector0->currentTravelProvider, $travelSelector1->currentDate, $travelSelector1->currentTravelType, $travelSelector1->currentTravelProvider">Potvrdiť</a>
-    </div>
+      {if $tripType == 'true'}
+          {control travelSelector1 $cityTo, $cityFrom, 'true', date('Y-m-d')}
+      {/if}
+
+      <div class="row">
+        <a class="btn btn-primary btn-block btn-big{if !$allowedInput} disabled{/if}" n:href="summary $cityFrom, $cityTo, $tripType, $travelSelector0->currentDate, $travelSelector0->currentTravelType, $travelSelector0->currentTravelProvider, $travelSelector1->currentDate, $travelSelector1->currentTravelType, $travelSelector1->currentTravelProvider">Potvrdiť</a>
+      </div>
   </div>
 
   <script>

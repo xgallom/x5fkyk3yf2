@@ -1,82 +1,141 @@
 {block content}
 
-<table class="table">
-    <thead>
-    <tr>
-        <th class="text-center">
-            Odchod
-        </th>
-        <th class="text-center">
-            Trasa
-        </th>
-        <th class="text-center">
-            Vodič
-        </th>
-        <th class="text-center">
-            Počet voľných miest
-        </th>
-        <th>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    {foreach $dbData as $row}
-        <tr class="text-center">
-            <td>
-                {$row['datestr']}
-            </td>
-            <td>
-                {$row['row']->city_from->name}
-                <img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12>
-                {$row['row']->city_to->name}
-            </td>
-            <td>
-                {$row['row']->trip->customer->name_first} {$row['row']->trip->customer->name_last}
-            </td>
-            <td>
-                {$row['spots']}
-            </td>
-            <td>
-                <a class="btn btn-primary" target="_parent"
-                        n:href="summary $row['row']->city_from->name, $row['row']->city_to->name, tripType => 'false', departure0 => $row['date'], departureTime0 => $row['time'], travelType0 => passenger, travelProvider0 => $row['row']->id">
-                    Pridať sa k posádke
-                </a>
-            </td>
-        </tr>
+<style>
+    body {
+        background-color: transparent;
+    }
+</style>
+
+{if $error == true}
+    <center><h3>Momentálne nie sú objednané žiadne jazdy.</h3></center>
+{else}
+    {foreach $dbData as $val}
+        {php if(!$val['row']->travel_type->is_provider) continue;}
+        <div class="container {if $mobile}mobile-padding{else}not-mobile-padding{/if}" style="background-color: #fff; margin-left: auto;  margin-right: auto; border-radius: .25rem;">
+            <div class="row selector-not-first-row" style="padding-bottom: 0">
+                <div class="col col-md-6 col-lg-3">
+                    <div class="row text-muted"><small>Odchod:</small></div>
+                    <div class="row">
+                        <div class="col col-lg-12 {if $mobile}text-center{/if}">
+                            {$val['datestr']}
+                        </div>
+                    </div>
+                </div>
+                {if $mobile}
+            </div>
+            <div class="row selector-not-first-row">
+                {/if}
+                <div class="col col-md-6 col-lg-4">
+                    <div class="row text-muted"><small>Trasa:</small></div>
+                    <div class="row">
+                        <div class="col col-lg-12 {if $mobile}text-center{/if}">
+                            {$val['row']->city_from->name}
+                            <img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12 style="margin-left: 10px; margin-right: 10px">
+                            {$val['row']->city_to->name}
+                        </div>
+                    </div>
+                </div>
+                {if $mobile}
+            </div>
+            <div class="row selector-not-first-row">
+                {/if}
+                <div class="col col-md-6 col-lg-3">
+                    <div class="row text-muted"><small>Vodič:</small></div>
+                    <div class="row">
+                        <div class="col col-lg-12 {if $mobile}text-center{/if}">
+                            {$val['row']->trip->customer->name_first} {$val['row']->trip->customer->name_last}
+                        </div>
+                    </div>
+                </div>
+                {if $mobile}
+            </div>
+            <div class="row selector-not-first-row">
+                {/if}
+                <div class="col col-md-6 col-lg-2">
+                    <div class="row text-muted"><small>Voľných miest: </small></div>
+                    <div class="row">
+                        <div class="col col-lg-12 {if $mobile}text-center{/if}">
+                            {$val['spots']}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {if $val['passengers'] != null}
+                <div class="row selector-row" style="margin-top: .5rem;">
+                {foreach $val['passengers'] as $passenger}
+                    <div class="col col-md-6 col-lg-3">
+                        <div class="row text-muted"><small>Spolujazdec:</small></div>
+                        <div class="row">
+                            <div class="col col-lg-12 {if $mobile}text-center{/if}">
+                                {$passenger->trip->customer->name_first} {$passenger->trip->customer->name_last}
+                            </div>
+                        </div>
+                    </div>
+                    {if $mobile}
+                        </div>
+                        <div class="row selector-not-first-row">
+                    {/if}
+                {/foreach}
+                </div>
+            {/if}
+            <div class="row selector-row" style="margin-top: .5rem;">
+                {if !$mobile}
+                <div class="col col-lg-2"></div>
+                {/if}
+                <div class="col col-lg-4">
+                    <a class="btn btn-block btn-primary{if $val['spots'] === 0} disabled{/if}" target="_parent"
+                            n:href="show $val['row']->city_from->name, $val['row']->city_to->name, tripType => 'true', departure0 => $val['date'], travelType0 => passenger, travelProvider0 => $val['row']->id, departure1 => $val['date']">
+                        Pridať sa na spiatočnú cestu
+                    </a>
+                </div>
+                {if $mobile}
+            </div>
+            <div class="row selector-not-first-row">
+                {/if}
+                <div class="col col-lg-4">
+                    <a class="btn btn-block btn-primary{if $val['spots'] === 0} disabled{/if}" target="_parent"
+                            n:href="show $val['row']->city_from->name, $val['row']->city_to->name, tripType => 'false', departure0 => $val['date'], travelType0 => passenger, travelProvider0 => $val['row']->id">
+                        Pridať sa na jednosmernú cestu
+                    </a>
+                </div>
+                {if !$mobile}
+                    <div class="col col-lg-2"></div>
+                {/if}
+            </div>
+        </div>
     {/foreach}
-    </tbody>
-</table>
-<script>
-    function URL_add_parameter(url, param, value){
-        var hash       = {};
-        var parser     = document.createElement('a');
+    <script>
+        function URL_add_parameter(url, param, value){
+            var hash       = {};
+            var parser     = document.createElement('a');
 
-        parser.href    = url;
+            parser.href    = url;
 
-        var parameters = parser.search.split(/\?|&/);
+            var parameters = parser.search.split(/\?|&/);
 
-        for(var i=0; i < parameters.length; i++) {
-            if(!parameters[i])
-                continue;
+            for(var i=0; i < parameters.length; i++) {
+                if(!parameters[i])
+                    continue;
 
-            var ary      = parameters[i].split('=');
-            hash[ary[0]] = ary[1];
+                var ary      = parameters[i].split('=');
+                hash[ary[0]] = ary[1];
+            }
+
+            hash[param] = value;
+
+            var list = [];
+            Object.keys(hash).forEach(function (key) {
+                list.push(key + '=' + hash[key]);
+            });
+
+            parser.search = '?' + list.join('&');
+            return parser.href;
         }
-
-        hash[param] = value;
-
-        var list = [];
-        Object.keys(hash).forEach(function (key) {
-            list.push(key + '=' + hash[key]);
-        });
-
-        parser.search = '?' + list.join('&');
-        return parser.href;
-    }
-    if($(window).width() < 992) {
-        if({$mobile} !== true)
-        window.location.replace({link list mobile => true});
-    }
-    else if({$mobile} === true)
-        window.location.replace({link show mobile => false});
-</script>
+        if($(window).width() < 992) {
+            if({$mobile} !== true)
+            window.location.replace({link list mobile => true});
+        }
+        else if({$mobile} === true)
+            window.location.replace({link show mobile => false});
+    </script>
+{/if}

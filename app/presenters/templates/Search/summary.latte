@@ -20,22 +20,26 @@
 <div class="container main-container">
 
     <div class="starter-template">
-        <div class="row show-header">
-            <div class="col col-lg-3 text-left responsive-title">
-                <h5 class="text-middle">Vybrané spojenie</h5>
+        <div class="container">
+            <div class="container show-header">
+                <div class="row">
+                    <div class="col col-md-12 col-lg-3 text-center responsive-title">
+                        <h5 class="text-middle">Vybrané spojenie</h5>
+                    </div>
+                    <div class="col col-lg-2 btn btn-sm text-left">
+                        {switch $tripType}
+                            {case 'true'}Spiatočná cesta
+                            {case 'false'}Jednosmerná cesta
+                        {/switch}
+                    </div>
+                    <div class="col col-lg-2 btn btn-sm"><b>{$cityFrom}</b></div>
+                    <div class="col col-lg-1 btn btn-sm"><img src="../img/glyphicons/png/glyphicons-212-arrow-right-light.png" width=12></div>
+                    <div class="col col-lg-2 btn btn-sm"><b>{$cityTo}</b></div>
+                    <div class="col col-lg-2"><a class="btn btn-block btn-primary btn-sm"
+                        n:href="show, $cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1"
+                    >Zmeniť spojenie</a></div>
+                </div>
             </div>
-            <div class="col col-lg-2 btn btn-sm text-left">
-                {switch $tripType}
-                    {case 'true'}Spiatočná cesta
-                    {case 'false'}Jednosmerná cesta
-                {/switch}
-            </div>
-            <div class="col col-lg-2 btn btn-sm"><b>{$cityFrom}</b></div>
-            <div class="col col-lg-1 btn btn-sm"><img src="../img/glyphicons/png/glyphicons-212-arrow-right-light.png" width=12></div>
-            <div class="col col-lg-2 btn btn-sm"><b>{$cityTo}</b></div>
-            <div class="col col-lg-2"><a class="btn btn-block btn-primary btn-sm"
-                n:href="show, $cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1"
-            >Zmeniť spojenie</a></div>
         </div>
 
         <form
@@ -60,21 +64,30 @@
                 {control travelInfo1 $cityTo, $cityFrom, 'true', $departure1, $travelType1, $travelProvider1}
             {/if}
 
-            <div class="selector selector-summary">
-                <div class="row row-padded row-spaced">
-                    <div class="col text-dark col-xs-12 col-sm-12 col-lg-12 col-xl-12"><h5 class="text-dark">Kontaktné Údaje</h5></div>
-                </div>
-
-                <div class="row row-padded">
-                    <div class="input-group" style="margin-left: 4.5rem; width: 20rem">
-                        <span class="input-group-addon">E-Mail</span>
-                        <input class="form-control" name="email" type="text" value="{$lastMail}">
-                        <span class="input-group-addon">@o2.sk</span>
+            <div class="container">
+                <div class="selector selector-summary">
+                    <div class="row row-padded row-spaced">
+                        <div class="col text-dark col-xs-12 col-sm-12 col-lg-12 col-xl-12"><h5 class="text-dark">Kontaktné Údaje</h5></div>
                     </div>
-                    <div class="col col-xl-2"></div>
-                    <div class="input-group" style="margin-left: 4.5rem; width: 15rem">
-                        <span class="input-group-addon">Mobil</span>
-                        <input class="form-control" name="phone" type="tel" value="{$lastPhone}">
+
+                    <div class="row row-padded">
+                        <div class="col col-sm-12 col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">E-Mail</span>
+                                <input class="form-control" name="email" type="text" value="{$lastMail}">
+                                <span class="input-group-addon">@o2.sk</span>
+                            </div>
+                        </div>
+                        {if $mobile}
+                    </div>
+                    <div class="row row-padded">
+                        {/if}
+                        <div class="col col-sm-12 col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Mobil</span>
+                                <input class="form-control" name="phone" type="tel" value="{$lastPhone}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

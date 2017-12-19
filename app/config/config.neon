@@ -7,9 +7,9 @@ application:
 		*: App\*Module\Presenters\*Presenter
 
 database:
-	dsn: 'pgsql:host=127.0.0.1;dbname=ta3w544z'
-	user: ta3w544z
-	password: 3eqORJCVFy
+	dsn: 'pgsql:host=127.0.0.1;dbname=o2carpool'
+	user: o2carpool
+	password: o2carpool
 	debugger: true
 	options:
 	    lazy: yes

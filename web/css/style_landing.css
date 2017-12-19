@@ -555,6 +555,20 @@ body.mobile-nav-active #mobile-nav-toggle {
   line-height: 24px;
 }
 
+#services .btn-get-started {
+  background: #006cd3;
+  border: 2px solid #006cd3;
+  color: #fff;
+}
+
+#services .btn-get-started:hover {
+  background: none;
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+
+
 /* Subscribe Section
 --------------------------------*/
 #subscribe {
@@ -573,12 +587,12 @@ body.mobile-nav-active #mobile-nav-toggle {
   color: #fff;
 }
 
-#subscribe .subscribe-btn-container {
+#services .subscribe-btn-container {
   text-align: center;
   padding-top: 20px;
 }
 
-#subscribe .subscribe-btn {
+#services .subscribe-btn {
   font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   font-weight: 500;
@@ -589,7 +603,9 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 2px;
   transition: 0.5s;
   margin: 10px;
-  border: 2px solid #fff;
+#  border: 2px solid #fff;
+  background: #006cd3;
+  border: 2px solid #006cd3;
   color: #fff;
 }
 

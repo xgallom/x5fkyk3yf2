@@ -64,6 +64,7 @@ body {
 .starter-template {
   padding: 1rem;
   padding-bottom: 0;
+  padding-top: 3rem;
   text-align: center;
 }
 
@@ -118,11 +119,11 @@ body {
   background-color: #eee;
   background-color: #343a40;
   color: #fff;
-  padding: 0.55rem;
+  padding: 1rem;
   padding-top: .55rem;
   padding-bottom: .55rem;
 
-  margin: 1rem;
+  #margin: 1rem;
 }
 
 .btn-big {
@@ -134,7 +135,9 @@ body {
   background-color: #eee;
   padding: 1rem;
   padding-top: .25rem;
-  margin: 1rem;
+  #margin: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .selector-summary {
@@ -164,6 +167,28 @@ body {
   border-top-right-radius: 0;
 }
 
+.vertical-center {
+  position: relative;
+  margin: auto;
+  display:inline-block;
+  vertical-align: middle;
+}
+
+.mobile-padding {
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+.not-mobile-padding {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  margin-bottom: 32px;
+}
+
 .selector-row {
   display: flex;
   border-radius: .25rem;
@@ -172,6 +197,14 @@ body {
   margin-right: 0;
   padding-top: .5rem;
   padding-bottom: .5rem;
+}
+
+.selector-not-first-row {
+  display: flex;
+  border-radius: .25rem;
+  margin-top: .5rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .selector-accordion {
@@ -223,12 +256,14 @@ a:hover {
 }
 
 .input-group {
-	margin-left: 6rem;
-	width: 15rem;
+	#margin-left: 6rem;
+  margin: auto;
+  margin-bottom: 16px;
+	width: 20rem;
 }
 
 .responsive-title {
-	max-width: 100%;
+  max-width: 100%;
 }
 
 @media screen and (max-width: 720px) {
@@ -245,4 +280,12 @@ a:hover {
 	.selector-head {
 		vertical-align: middle;
 	}
+}
+
+.breadcrumb {
+  background-color: #2d2e35 !important;
+}
+
+.main-row {
+  background-color: #e5e5e5;
 }

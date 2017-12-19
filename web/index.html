@@ -55,7 +55,7 @@
         <!--<h1>Dobrá jazda</h1>-->
         <h2>&nbsp <br>Služobná cesta <span class="rotating">bez papierovačiek, bez starostí, bez zbytočných emisií</span></h2>
         <div class="actions">
-          <a href="http://o2-carpool.xgallom.sk/web" class="btn-get-started">Zadaj služobku</a>
+          <a href="http://www.dobrajazda.sk/search/request" class="btn-get-started">Zadaj jazdu</a>
           <a href="#services" class="btn-get-started">Prehľad ciest</a>
         </div>
       </div>
@@ -95,7 +95,7 @@
         <div class="col-md-12">
           <h3 class="section-title">O nás</h3>
           <div class="section-title-divider"></div>
-          <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam</p>
+          <p class="section-description">Našim cieľom je pomôcť odbúrať zbytočnú administratívu vo firme, uľahčiť kolegom pátranie po odvoze a byť zelenšou firmou. Veríme, že môžeme cestovať efektívnejšie, ekonomickejšie a ekologickejšie. Veríme, že zdielanie ciest a vzájomná pomoc medzi kolegami je súčasťou DNA O2 a že pri cestovaní najlepšie spoznáme svojich kolegov. A predsa neformálne a priateľské vzťahy na pracovisku sú základom úspechu.</p>
         </div>
       </div>
     </div>
@@ -103,7 +103,7 @@
       <div class="row">
         
           <p class="about-text">
-            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Určite to poznáte. Idete na služobku alebo offsite a pýtate sa kolegov okolo seba: Kto ide zajtra na služobku? Berieš auto? Máš voľné miesto? atď. Môže to zabrať dosť veľa času s nejasným záverom. Nakoniec prídete na miesto určenia a s úžasom zisťujete, kto všetko tam tiež je. A že 12 kolegov prišlo na 7 autách. Prečo je to tak? Rozhodli sme sa to zmeniť.
           </p>
         
       </div>
@@ -118,12 +118,18 @@
       <div class="row">
         <div class="col-md-12">
           <h3 class="section-title">Aktuálne jazdy</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium</p>
         </div>
       </div>
         
-      <iframe src="search/list" style="border: none; width: 100%; height: 700px;"></iframe>
+      <iframe src="search/list" style="border: none; width: 100%; height: 500px"></iframe>
+
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 subscribe-btn-container">
+          <a class="subscribe-btn" href="http://www.dobrajazda.sk/search/request">Zadaj jazdu</a>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
       
     </div>  
   </section> 
@@ -175,23 +181,6 @@
   </section>
 
 <!--==========================
-  Subscrbe Section
-============================-->  
-  <section id="subscribe">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-8">
-          <h3 class="subscribe-title">Šetri čas</h3>
-          <p class="subscribe-text">Už viac nemusíš vypĺňať papierové tlačivá, cestovať sám, či bojovať s vyúčtovaním v tajomnom svete SAPu.</p>
-        </div>
-        <div class="col-md-4 subscribe-btn-container">
-          <a class="subscribe-btn" href="">Zadaj služobku</a>
-        </div>
-      </div>
-    </div>
-  </section>
-    
-<!--==========================
   Contact Section
 ============================--> 
   <section id="contact">
@@ -214,7 +203,7 @@
             
             <div>
               <i class="fa fa-envelope"></i>
-              <p>Na emaily <br> <a href="mailto:dobrajazda@o2.sk">dobrajazda@o2.sk</a></p>
+              <p>Na emaili <br> <a href="mailto:dobrajazda@o2.sk">dobrajazda@o2.sk</a></p>
             </div>
             
           </div>
@@ -224,16 +213,21 @@
           <div class="form">
             <div id="sendmessage">Your message has been sent. Thank you!</div>
             <div id="errormessage"></div>
-            <form action="" method="post" role="form" class="contactForm">                
+            <form action="https://formspree.io/dobrajazda@o2.sk" method="post" role="form" class="contactForm">
                 <div class="form-group">
                   <input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
                   <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                  <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Napíšte nám niečo" placeholder="Správa"></textarea>
+                  <textarea class="form-control" name="message" id="feedback-message" rows="5" data-rule="required" data-msg="Napíšte nám niečo" placeholder="Správa"></textarea>
                   <div class="validation"></div>
                 </div>
-                <div class="text-center"><button type="submit">Odoslať</button></div>
+                <div class="text-center"><button id="feedback-send" type="submit" disabled>Odoslať</button></div>
+              <style>
+                #feedback-send[disabled], #feedback-send[disabled]:hover {
+                  background-color: #3c3c3c !important;
+                }
+              </style>
             </form>
           </div>
         </div>
@@ -282,7 +276,18 @@
   <script src="js/custom.js"></script>
   
   <script src="contactform/contactform.js"></script>
-  
-    
+
+  <script>
+      jQuery(document).ready(function() {
+          jQuery('#email').add('#feedback-message').keyup(function() {
+              if(!jQuery('#email').val() || !jQuery('#feedback-message').val()) {
+                  jQuery('#feedback-send').attr("disabled", "disabled");
+              }
+              else {
+                  jQuery('#feedback-send').attr("disabled", null);
+              }
+          });
+      });
+  </script>
 </body>
 </html>

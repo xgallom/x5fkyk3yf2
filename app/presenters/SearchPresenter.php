@@ -75,10 +75,10 @@ class SearchPresenter extends BasePresenter
     public function renderList($mobile) {
         $this->mobile = $this->template->mobile = $mobile;
 
-        $table = $this->travelModel->table()->where('travel_type.is_provider', true);
-        $table->where('travel_type.is_provider', true);
-        $table->where('trip.customer.is_confirmed', true);
-        $table->order('departure');
+        $table = $this->travelModel->table()
+	        ->where('trip.customer.is_confirmed', true)
+	        ->where('departure > ?', date('Y-m-d'))
+            ->order('departure');
 
         $dbData = $table->fetchAll();
 
@@ -92,22 +92,28 @@ class SearchPresenter extends BasePresenter
                 $approved = $val->is_approved;
 
             if($approved) {
-                if ($n++ > 10)
+                if ($n++ > 40)
                     break;
+
+                $passengers = $this->travelModel->table()
+                    ->where('trip.is_approved', true)
+                    ->where('trip.customer.is_confirmed', true)
+                    ->where('travel_provider_id', $val->id);
+                $count = $passengers->count();
 
                 array_push($this->template->dbData, [
                     'row' => $val,
+                    'passengers' => $count > 0 ? $passengers->fetchAll() : null,
                     'datestr' => DateTime::from($val->departure)->format('j.n.Y G:i'),
                     'date' => DateTime::from($val->departure)->format('Y-m-d'),
                     'time' => DateTime::from($val->departure)->format('H:i'),
-                    'spots' => $val->spots - $this->travelModel->table()
-                            ->where('trip.is_approved', true)->where('trip.customer.is_confirmed', true)->where('travel_provider_id', $val->id)
-                            ->count()
+                    'spots' => $val->spots - $count
                 ]);
             }
         }
 
         $this->template->dbDate = $dbData;
+        $this->template->error = count($dbData) > 0 ? false : true;
     }
 
     public function renderRequest($cityFrom, $cityTo, $tripType) {
@@ -190,11 +196,11 @@ class SearchPresenter extends BasePresenter
 
         $this->template->travelSelector0 = $this->travelSelector0;
         $this->template->travelSelector1 = $this->travelSelector1;
-        $this->template->allowedInput = $this->travelSelector0->currentTravelType != null && $this->travelSelector1->currentTravelType != null ? true : false;
+        $this->template->allowedInput = $this->travelSelector0->currentTravelType != null && ($tripType != "true" || $this->travelSelector1->currentTravelType != null) ? true : false;
         $this->template->headerTitle = "Vyhľadané spojenia";
     }
 
-    public function actionSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $error)
+    public function actionSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $error, $mobile)
     {
         // TODO: implement weekends
         $date = DateTime::from(Date('Y-m-d'))->modify('+1 day');
@@ -204,8 +210,10 @@ class SearchPresenter extends BasePresenter
             $this->forward('Search:notify');
     }
 
-    public function renderSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $error)
+    public function renderSummary($cityFrom, $cityTo, $tripType, $departure0, $travelType0, $travelProvider0, $departure1, $travelType1, $travelProvider1, $error, $mobile)
     {
+        $this->mobile = $mobile;
+        $this->template->mobile = $this->mobile;
         $this->template->lastMail = isset($_COOKIE['last_mail']) ? $_COOKIE['last_mail'] : '';
         $this->template->lastPhone = isset($_COOKIE['last_phone']) ? $_COOKIE['last_phone'] : '09';
         $this->template->lastSuper = isset($_COOKIE['last_super']) ? $_COOKIE['last_super'] : '';
@@ -231,39 +239,26 @@ class SearchPresenter extends BasePresenter
                                  $email, $phone, $supervisor)
     {
         $error = false;
-        if(empty($email))
+        if(empty($email) || !filter_var($email . '@o2.sk', FILTER_VALIDATE_EMAIL))
             $error = "email";
 
         if($travelType0 == 'car_rental') {
-            if (empty($supervisor))
+            if (empty($supervisor) || !filter_var($supervisor . '@o2.sk', FILTER_VALIDATE_EMAIL))
                 $error = "supervisor";
         }
         else if($travelType0 == 'car_personal' || $travelType0 == 'car_company')
             if(intval($spots0) < 1 || intval($spots0) > 4)
-                $error = "spots0";
+                $error = "spots";
 
         if($tripType == 'true')
             if($travelType1 == 'car_personal' || $travelType1 == 'car_company')
                 if(intval($spots1) < 1 || intval($spots1) > 4)
-                    $error = "spots1";
+                    $error = "spots";
 
         if($error != false)
-            $this->forward('Search:summary', [
-                $cityFrom,
-                $cityTo,
-                $tripType,
-                $this->travelSelector0->currentDate,
-                $this->travelSelector0->currentTravelType,
-                $this->travelSelector0->currentTravelProvider,
-                $this->travelSelector1->currentDate,
-                $this->travelSelector1->currentTravelType,
-                $this->travelSelector1->currentTravelProvider,
+            $this->forward('Search:processed', [
                 'error' => $error
             ]);
-
-        setcookie('last_mail', $email, time()+60*60*24*30);
-        setcookie('last_phone', $phone, time()+60*60*24*30);
-        setcookie('last_super', $supervisor, time()+60*60*24*30);
 
         $cityFromId = $this->cityModel->table()->where('name', $cityFrom)->fetchField('id');
         $cityToId = $this->cityModel->table()->where('name', $cityTo)->fetchField('id');
@@ -271,12 +266,18 @@ class SearchPresenter extends BasePresenter
         $superName = explode('.', $supervisor, 2);
         $superName = ucfirst($superName[0]);
 
+        $email = strtolower(preg_replace('/[\x00-\x1F\x7F]/u', '', $email));
+        $supervisor = strtolower(preg_replace('/[\x00-\x1F\x7F]/u', '', $supervisor));
+        setcookie('last_mail', $email, time()+60*60*24*30);
+        setcookie('last_phone', $phone, time()+60*60*24*30);
+        setcookie('last_super', $supervisor, time()+60*60*24*30);
+
         $name = explode('.', $email, 2);
-        $email = $email . '@o2.sk';
-        $supervisor = $supervisor . '@o2.sk';
-        $bohus = 'minion1696@gmail.com';
-        $sender = 'o2@dobrajazda.sk';
-        $domain = 'http://beta.dobrajazda.sk/web';
+
+        include('emails/config.php');
+
+        $email = $email . $suffix;
+        $supervisor = $supervisor . $suffix;
 
         $firstName = $name[0];
         $lastName = null;
@@ -287,28 +288,18 @@ class SearchPresenter extends BasePresenter
 
         $firstName = ucfirst($firstName);
 
-        $customer = $this->customerModel->table()->where('email', $email)->fetch();
+        $customer = $this->customerModel->table()->where('email LIKE ?', '%' . $email . '%')->fetch();
 
+        $created = false;
         if ($customer === false) {
+            $created = true;
+            $token_confirm = bin2hex(openssl_random_pseudo_bytes(16));
+
             $customer = $this->customerModel->table()->insert([
                 'email' => $email,
                 'name_first' => $firstName,
                 'name_last' => $lastName,
-                'phone' => (strlen($phone) < 10 ? null : $phone)
-            ]);
-
-//            Debugger::dump($mailConfirm->generateMessage());
-        }
-
-        if(strlen($phone) >= 10)
-            $this->customerModel->table()->where('id', $customer->id)->update([
-                'phone' => $phone
-            ]);
-
-        if($customer->is_confirmed === false) {
-            $token_confirm = bin2hex(openssl_random_pseudo_bytes(16));
-
-            $this->customerModel->table()->where('id', $customer->id)->update([
+                'phone' => (strlen($phone) < 10 ? null : $phone),
                 'token_confirm' => $token_confirm
             ]);
 
@@ -323,7 +314,7 @@ aby sme si boli istí, že si to naozaj ty, prosím, potvrď zadanie tvojej slu�
 
 Stačí, keď sa identifikuješ iba raz. Následne už od teba nebudeme požadovať nič navyše. :)
 
-' . $domain . '/mail/confirm?customer=' . $token_confirm . '  
+' . $domain . 'mail/confirm?customer=' . $token_confirm . '  
 
 Ďakujeme a tešíme sa, že ti zjednodušujeme cestovanie.
 
@@ -334,145 +325,31 @@ Ak ti prišla táto správa bez toho, aby si zadal svoj email na webe www.dobraj
 ');
             $this->sendmailMailer->send($mailConfirm);
 //----------------------------------------------------------------------------------------------------------------------
+
         }
 
-        $trip = $this->tripModel->table()->insert([
-            'customer_id' => $customer->id
-        ]);
+        if(strlen($phone) >= 10)
+            $this->customerModel->table()->where('id', $customer->id)->update([
+                'phone' => $phone
+            ]);
 
-//---------------------------------------------------------------------------------------------------------------------- Mail nadriadenemu
-        if($travelType0 == 'car_rental') {
-            $body = 'Ahoj ' . $superName . ', 
-
-' . $firstName . ' ' . $lastName . ' si potrebuje požičať služobné auto na svoju služobnú cestu 
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' - ' . DateTime::from($departure1)->format('j.n.Y') . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . ' - ' . $cityFrom . ' 
-
-V prípade nesúhlasu so zápožičkou služobného vozidla, prosím, napíš na dobrajazda@o2.sk. 
-V opačnom prípade bude cesta považovaná za schválenú.
-    
-Ďakujeme ti za spoluprácu,  
-  
-Dobrá jazda';
-            $mailSupervisor = new Message();
-            $mailSupervisor->setFrom($sender)
-                ->addTo($supervisor)
-                ->setSubject('Zápožička služobného auta')
-                ->setBody($body);
-            $this->sendmailMailer->send($mailSupervisor);
-        }
-//---------------------------------------------------------------------------------------------------------------------- Mail nova jazda
-        $body = 'Ahoj ' . $firstName . ',
-  
-ďakujeme za zadanie tvojej služobnej jazdy:';
-
-        if($travelType0 == 'car_rental') {
-            $body .= '
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' - ' . DateTime::from($departure1)->format('j.n.Y') . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . ' - ' . $cityFrom . '
-
-Prosím, spoj sa s Bohušom, ktorý ti odovzdá kľúče a doklady od auta. V prípade, že sa k tebe pridá nejaký kolega, budeme ťa informovať.';
-        }
-        else if($travelType0 == 'passenger') {
-            if($tripType == 'true') {
-                $provider0 = $this->travelModel->table()->get($travelProvider0);
-                $body .= '
-Cesta TAM
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' o ' . DateTime::from($provider0->departure)->format('G:i') . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . '
-Šofér: ' . $provider0->trip->customer->name_first . ' ' . $provider0->trip->customer->name_last . ', ' . $provider0->trip->customer->email . ($provider0->trip->customer->phone == null ? '' : ', ' . $provider0->trip->customer->phone);
-
-                if($travelType1 == 'passenger') {
-                    $provider1 = $this->travelModel->table()->get($travelProvider1);
-                    $body .= '
-
-Cesta SPÄŤ
-    Kedy: ' . DateTime::from($departure1)->format('j.n.Y') . ' o ' . DateTime::from($provider1->departure)->format('G:i') . '
-    Kam: ' . $cityTo . ' - ' . $cityFrom . '
-Šofér: ' . $provider1->trip->customer->name_first . ' ' . $provider1->trip->customer->name_last . ', ' . $provider1->trip->customer->email . ($provider1->trip->customer->phone == null ? '' : ', ' . $provider1->trip->customer->phone) . '
-                    
-Nezabudni sa spojiť so šoférom a dohodnúť si presné miesto a čas odchodu.';
-                }
-                else {
-                    $body .= '
-Cesta SPÄŤ
-    Kedy: ' . DateTime::from($departure1)->format('j.n.Y') . ' o ' . $departureTime1 . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . '
-
-Nezabudni sa spojiť so šoférom a dohodnúť si presné miesto a čas odchodu.';
-                }
-            }
-            else {
-                $provider = $this->travelModel->table()->get($travelProvider0);
-                $body .= '
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' o ' . DateTime::from($provider->departure)->format('G:i') . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . '
-Šofér: ' . $provider->trip->customer->name_first . ' ' . $provider->trip->customer->name_last . ', ' . $provider->trip->customer->email . ($provider->trip->customer->phone == null ? '' : ', ' . $provider->trip->customer->phone) . '
-
-Nezabudni sa spojiť so šoférom a dohodnúť si presné miesto a čas odchodu.';
-            }
-        }
-        else { // personal, company, other
-            if($tripType == 'true') {
-                if ($travelType1 == 'passenger') {
-                    $provider = $this->travelModel->table()->get($travelProvider1);
-                    $body .= '
-Cesta TAM
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' o ' . $departureTime0 . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . '
-
-Cesta SPÄŤ
-    Kedy: ' . DateTime::from($departure1)->format('j.n.Y') . ' o ' . DateTime::from($provider->departure)->format('G:i') . '
-    Kam: ' . $cityTo . ' - ' . $cityFrom . '
-Šofér: ' . $provider->trip->customer->name_first . ' ' . $provider->trip->customer->name_last . ', ' . $provider->trip->customer->email . ($provider->trip->customer->phone == null ? '' : ', ' . $provider->trip->customer->phone) . '
-';
-                }
-                else { // personal, company, other
-                    $body .= '
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' - ' . DateTime::from($departure1)->format('j.n.Y') . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo . ' - ' . $cityFrom;
-
-                    if($travelType0 != 'other' || $travelType1 != 'other')
-                        $body .= '
-
-V prípade, že sa k tebe pridá nejaký kolega, budeme ťa informovať.';
-                }
-            }
-            else {
-                $body .= '
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' o ' . $departureTime0 . '
-    Kam: ' . $cityFrom . ' - ' . $cityTo;
-
-    if($travelType0 != 'other')
-        $body .= '
-
-V prípade, že sa k tebe pridá nejaký kolega, budeme ťa informovať.';
-            }
-        }
-
-
-        $body .=
-'
-
-Pokiaľ by sa tvoja cesta zmenila, napíš nám hneď na dobrajazda@o2.sk.
-   
-Pohodovú cestu ti želá,  
-
-Dobrá jazda 
- 
-P.S.: nezabudni si svoju služobku nahodiť aj do dochádzky a prípadné preplatenie nákladov vyúčtovať cez SAP';
-
-        $mailNewTravel = new Message();
-        $mailNewTravel->setFrom($sender)
-            ->addTo($email)
-            ->setSubject('Gratulujeme, máš zadanú novú jazdu')
-            ->setBody($body);
-
-        if($travelType0 == 'car_rental')
-            $mailNewTravel->addBcc($bohus);
-
-        $this->sendmailMailer->send($mailNewTravel);
 //----------------------------------------------------------------------------------------------------------------------
+
+        if($this->travelModel->table()->where('trip.customer.id', $customer->id)->where('travel.is_approved IS TRUE OR (travel.is_approved IS NULL AND trip.is_approved IS TRUE)')->where('to_char(departure, \'YYYY-MM-DD\') = \'' . $departure0 . '\'')->count() > 0
+        || ($tripType == 'true' && $this->travelModel->table()->where('trip.customer.id', $customer->id)->where('travel.is_approved IS TRUE OR (travel.is_approved IS NULL AND trip.is_approved IS TRUE)')->where('to_char(departure, \'YYYY-MM-DD\') = \'' . $departure1 . '\'')->count() > 0)
+        ) {
+//            Debugger::dump($this->travelModel->table()->where('trip.customer.id', $customer->id)->where('to_char(departure, \'YYYY-MM-DD\') = \'' . $departure0 . '\'')->fetchAll());
+//            Debugger::dump($this->travelModel->table()->where('trip.customer.id', $customer->id)->where('to_char(departure, \'YYYY-MM-DD\') = \'' . $departure1 . '\'')->fetchAll());
+            $this->forward('Search:processed', ['error' => 'duplicate']);
+        }
+
+        $this->tripModel->db()->beginTransaction();
+
+        $tokenRemove = bin2hex(openssl_random_pseudo_bytes(16));
+        $trip = $this->tripModel->table()->insert([
+            'customer_id' => $customer->id,
+            'token_remove' => $tokenRemove
+        ]);
 
         $this->travelModel->table()->insert([
             'departure' => $departure0 . ' ' . $departureTime0,
@@ -492,116 +369,69 @@ P.S.: nezabudni si svoju služobku nahodiť aj do dochádzky a prípadné prepla
                 'trip_id' => $trip->id,
                 'city_from_id' => $cityToId,
                 'city_to_id' => $cityFromId,
-                'spots' => $spots1 == null ? 0 : intval($spots1)
+                'spots' => $spots1 == null ? 0 : intval($spots1),
             ]);
         }
 
-//---------------------------------------------------------------------------------------------------------------------- Pridal sa k posadke mail
-        if($travelType0 == 'passenger') {
-            $provider = $this->travelModel->table()->get($travelProvider0);
+        $this->tripModel->db()->commit();
 
-            $body = 'Ahoj ' . $provider->trip->customer->name_first . '
+//---------------------------------------------------------------------------------------------------------------------- Mail nadriadenemu
 
-k tvojej služobnej jazde 
-    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' o ' . DateTime::from($provider->departure)->format('G:i') . ' 
-    Kam: ' . $cityFrom . ' - ' . $cityTo . ' 
+        if($travelType0 == 'car_rental') {
+            $body = 'Ahoj ' . $superName . ', 
 
-sa pridal: ' . $firstName . ' ' . $lastName . ', ' . $email . (strlen($phone) >= 10 ? ', ' . $phone : '') . '  
+' . $firstName . ' ' . $lastName . ' si potrebuje požičať služobné auto na svoju služobnú cestu 
+    Kedy: ' . DateTime::from($departure0)->format('j.n.Y') . ' - ' . DateTime::from($departure1)->format('j.n.Y') . '
+    Kam: ' . $cityFrom . ' - ' . $cityTo . ' - ' . $cityFrom . ' 
 
-Pre lepšiu koordináciu a pohodovú jazdu ti odporúčame spojiť sa vopred so všetkými spolucestujúcimi. 
+V prípade nesúhlasu so zápožičkou služobného vozidla, prosím, napíš na dobrajazda@o2.sk. 
+V opačnom prípade bude cesta považovaná za schválenú.
+    
+Ďakujeme ti za spoluprácu,  
   
-Pokiaľ by sa tvoja cesta zmenila, napíš nám hneď na dobrajazda@o2.sk.
+Dobrá jazda';
+            try {
+                $mailSupervisor = new Message();
+                $mailSupervisor->setFrom($sender)
+                    ->addTo($supervisor)
+                    ->setSubject('Zápožička služobného auta')
+                    ->setBody($body);
+                $this->sendmailMailer->send($mailSupervisor);
+            } catch(AssertionException $e) {
+                $this->forward('Search:processed', [
+                    'error' => 'email'
+                ]);
+            }
 
-Pekný zvyšok dňa ti želá,  
-  
-Dobrá jazda 
-';
-            $mailAdded = new Message();
-            $mailAdded->setFrom($sender)
-                ->addTo($provider->trip->customer->email)
-                ->setSubject('Gratulujeme, máš nového spolujazdca')
-                ->setBody($body);
-            $this->sendmailMailer->send($mailAdded);
         }
-        if($tripType == 'true' && $travelType1 == 'passenger') {
-            $provider = $this->travelModel->table()->get($travelProvider1);
 
-            $body = 'Ahoj ' . $provider->trip->customer->name_first . '
-
-k tvojej služobnej jazde 
-    Kedy: ' . DateTime::from($departure1)->format('j.n.Y') . ' o ' . DateTime::from($provider->departure)->format('G:i') . ' 
-    Kam: ' . $cityTo . ' - ' . $cityFrom . ' 
-
-sa pridal: ' . $firstName . ' ' . $lastName . ', ' . $email . (strlen($phone) >= 10 ? ', ' . $phone : '') . '  
-
-Pre lepšiu koordináciu a pohodovú jazdu ti odporúčame spojiť sa vopred so všetkými spolucestujúcimi. 
-  
-Pokiaľ by sa tvoja cesta zmenila, napíš nám hneď na dobrajazda@o2.sk.
-
-Pekný zvyšok dňa ti želá,
-  
-Dobrá jazda 
-';
-            $mailAdded = new Message();
-            $mailAdded->setFrom($sender)
-                ->addTo($provider->trip->customer->email)
-                ->setSubject('Gratulujeme, máš nového spolujazdca')
-                ->setBody($body);
-            $this->sendmailMailer->send($mailAdded);
-        }
 //----------------------------------------------------------------------------------------------------------------------
 
+        if($created === true)
+            $this->forward('Search:processed');
+
+//----------------------------------------------------------------------------------------------------------------------
+
+        include('emails/emails_added.php');
+
         $this->forward('Search:processed');
-
-
-        /*
-        ->setHtmlBody('
-<head>
-<style>
-.bg {
-background-color: #2d2e35;
-border-radius: 8px;
-padding: 45px 35px;
-}
-.fg {
-width: 700px;
-margin: auto;
-}
-*, p, h2, h4 {
-text-align: justify;
-color: #d8d6d9;
-}
-a {
-text-decoration: none;
-color: #5495d3;
-}
-a:hover {
-color: #2a81d3;
-}
-
-.button {
-display: block;
-margin: auto;
-text-align: center;
-}
-</style>
-</head>
-<body>
-<div class="bg"><div class="fg"><h2>Ahoj ' . $name . ',</h2>
-<p>aby sme si boli istí, že si to naozaj ty, prosím, potvrď zadanie tvojej služobnej cesty cez dobrajazda.sk.<br>
-Stačí, keď sa identifikuješ iba raz. Následne už od teba nebudeme požadovať nič navyše. :)</p>
-<h3><a class="button" href="x5fkyk3yf2.xgallom.sk/web/mail/confirm?customer=' . $token_confirm . '">Áno, som to ja</a></h3>
-<p>Ďakujeme a tešíme sa, že ti zjednodušujeme cestovanie.</p>
-<h4 style="margin-bottom: 0; -webkit-margin-after: 0;">Dobrá jazda</h4><i>
-Odvoz na dva kliky
-<p style="text-align: center">Ak ti prišla táto správa bez toho, aby si zadal svoj email na webe www.dobrajazda.sk, daj nám, prosím, o tom vedieť na dobrajazda@o2.sk.</p></i></div></div>
-</body>
-');*/
     }
 
     public function renderNotify()
     {
+        $this->template->deviceWidth = true;
+    }
 
+    public function renderProcessed($error) {
+        $this->template->deviceWidth = true;
+
+
+        if(isset($error)) {
+            $this->template->error = true;
+            $this->template->errormsg = $error;
+        }
+        else
+            $this->template->error = false;
     }
 
     /**
@@ -705,13 +535,21 @@ Odvoz na dva kliky
                     ->where('id <> ?', $ts0->currentTravelProvider)
                     ->fetch();
 
-                if( DateTime::from($newProvider->departure) >= $ts0->getDate()
-                    &&($ts1->currentDate == $ts1->minimumDate->format('Y-m-d')
-                    || $ts1->currentDate == DateTime::from($newProvider->departure)->format('Y-m-d'))
-                ) {
-                    $ts1->currentDate = DateTime::from($newProvider->departure)->format('Y-m-d');
-                    $ts1->currentTravelType = "passenger";
-                    $ts1->currentTravelProvider = $newProvider->id;
+                if($newProvider == null) {
+                    if($ts1->currentTravelType == "car_rental")
+                        $ts1->currentTravelType = null;
+
+                    // break
+                }
+                else {
+                    if( DateTime::from($newProvider->departure) >= $ts0->getDate()
+                        &&($ts1->currentDate == $ts1->minimumDate->format('Y-m-d')
+                            || $ts1->currentDate == DateTime::from($newProvider->departure)->format('Y-m-d'))
+                    ) {
+                        $ts1->currentDate = DateTime::from($newProvider->departure)->format('Y-m-d');
+                        $ts1->currentTravelType = "passenger";
+                        $ts1->currentTravelProvider = $newProvider->id;
+                    }
                 }
             }
         }

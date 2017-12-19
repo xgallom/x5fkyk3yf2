@@ -1,41 +1,42 @@
-<div class="selector selector-summary">
-    <div class="row row-spaced-more">
-        <div class="btn-group col-lg-12">
-            <div class="col text-dark col-xs-12 col-sm-4 col-lg-3 col-xl-2 btn-first">{$cityFrom}</div>
-            <div class="col text-dark           col-sm-1 col-lg-1 col-xl-1"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12></div>
-            <div class="col text-dark           col-sm-4 col-lg-3 col-xl-2"><b>{$cityTo}</b></div>
-            <div class="col text-dark                    col-lg-2 col-xl-4 hidden-sm visible-md"></div>
-            <div class="col text-dark           col-sm-3 col-lg-3 col-xl-3">{$date['day']}, <b>{$date['str']}. {$date['mon']}</b></div>
+<div class="container">
+    <div class="container selector selector-summary">
+        <div class="row row-spaced-more">
+            <div class="btn-group col-lg-12">
+                <div class="col text-dark col-xs-12 col-sm-4 col-lg-2 col-xl-2 btn-first"><span class="vertical-center">{$cityFrom}</span></div>
+                <div class="col text-dark           col-sm-1 col-lg-2 col-xl-2"><span class="vertical-center"><img src="../img/glyphicons/png/glyphicons-212-arrow-right.png" width=12></span></div>
+                <div class="col text-dark           col-sm-4 col-lg-2 col-xl-2"><span class="vertical-center"><b>{$cityTo}</b></span></div>
+                <div class="col text-dark           col-sm-3 col-lg-6 col-xl-6">{$date['day']}, <b>{$date['str']}. {$date['mon']}</b></div>
+            </div>
         </div>
-    </div>
-    <div class="row row-padded row-spaced">
-        <div class="col text-dark col-xs-12 col-sm-9 col-lg-7 col-xl-5 responsive-title"><b>{$travelType['str']}</b></div>
-        <div class="col text-dark                    col-lg-2 col-xl-4 hidden-sm visible-md"></div>
-        <div class="col text-dark           col-sm-3 col-lg-2 col-xl-3">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
-    </div>
+        <div class="row row-padded row-spaced">
+            <div class="col text-dark col-xs-12 col-sm-9 col-lg-6 responsive"><b>{$travelType['str']}</b></div>
+            <div class="col text-dark           col-sm-3 col-lg-6">Cesta {switch $tripStep} {case 'false'}tam {case 'true'}späť{/switch}</div>
+        </div>
 
-    {if $travelType['val'] == 'passenger'}
-        <div class="row row-padded">
-            <div class="col col-xl-2"></div>
-            <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-5 text-left"><b>{$time}</b></div>
-            <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-4 text-right"><b>{$dbData->trip->customer->name_first} {$dbData->trip->customer->name_last}</b></div>
-        </div>
-        <div class="row row-padded">
-            <div class="col col-xl-2"></div>
-            <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-5 text-left">{$cityFrom}</div>
-            <div class="col text-dark col-xs-12 col-sm-9 col-lg-5 col-xl-4 text-right">Vodič</div>
-        </div>
-    {elseif $travelType['val'] == 'car_company' || $travelType['val'] == 'car_personal' || $travelType['val'] == 'car_rental'}
-        <div class="row row-padded">
-            <div class="input-group">
-                <span class="input-group-addon">Čas odjazdu</span>
-                <input class="form-control" name="departure_time_{$id}" type="time" value="{switch $tripStep}{case 'false'}08:00:00{case 'true'}15:00:00{/switch}">
+        {if $travelType['val'] == 'passenger'}
+            <div class="row row-padded">
+                <div class="col text-dark col-xs-12 col-sm-9 col-lg-6 col-xl-6">Odchod</div>
+                <div class="col text-dark col-xs-12 col-sm-9 col-lg-6 col-xl-6">Vodič</div>
             </div>
-            <div class="col col-xl-4"></div>
-            <div class="input-group">
-                <span class="input-group-addon">Počet voľných sedadiel</span>
-                <input type="number" class="form-control" name="spots_{$id}" min="1" value="3" max="4" {if $travelType['val'] == 'car_rental'}readonly{/if}>
+            <div class="row row-padded">
+                <div class="col text-dark col-xs-12 col-sm-9 col-lg-6 col-xl-6"><b>{$time} {$cityFrom}</b></div>
+                <div class="col text-dark col-xs-12 col-sm-9 col-lg-6 col-xl-6"><b>{$dbData->trip->customer->name_first} {$dbData->trip->customer->name_last}</b></div>
             </div>
-        </div>
-    {/if}
+        {elseif $travelType['val'] == 'car_company' || $travelType['val'] == 'car_personal' || $travelType['val'] == 'car_rental'}
+            <div class="row row-padded">
+                <div class="col col-sm-12 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">Čas odjazdu</span>
+                        <input class="form-control" name="departure_time_{$id}" type="time" value="{switch $tripStep}{case 'false'}08:00:00{case 'true'}15:00:00{/switch}">
+                    </div>
+                </div>
+                <div class="col col-sm-12 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">Počet voľných sedadiel</span>
+                        <input type="number" class="form-control" name="spots_{$id}" min="1" value="3" max="4" {if $travelType['val'] == 'car_rental'}readonly{/if}>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </div>
 </div>

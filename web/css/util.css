@@ -15,7 +15,17 @@
     margin-bottom: 4px;
 }
 
+@media (max-width: 991px) {
+    body {
+        font-size: .75rem;
+    }
+}
+
 @media (min-width: 992px) {
+    .input-group {
+
+    }
+
     .hidden-md {
         display: none;
     }

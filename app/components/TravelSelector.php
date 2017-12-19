@@ -101,6 +101,8 @@ class TravelSelector extends Control
 
         $dbData = $table->fetchAll();
 
+        Debugger::dump($dbData);
+
         $this->template->dbData = [];
         $n = 0;
         foreach($dbData as $val) {

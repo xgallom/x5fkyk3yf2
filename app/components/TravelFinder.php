@@ -33,6 +33,6 @@ class TravelFinder extends Form
             ->addRule(Form::EQUAL, 'Zadajte existujúce mesto', $cities)
             ->setDefaultValue($default_values['city_to']);
 
-        $this->addSubmit('submit', 'Vyhladať spojenie');
+        $this->addSubmit('submit', 'Vyhľadať spojenie');
     }
 }
